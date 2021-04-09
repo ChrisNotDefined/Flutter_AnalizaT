@@ -9,7 +9,7 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBarComponent(),
+        appBar: appBarComponent(context),
         body: Container(
           padding: EdgeInsets.all(10.0),
           child: Column(

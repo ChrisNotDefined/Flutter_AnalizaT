@@ -7,7 +7,7 @@ class SleepPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarComponent(),
+      appBar: appBarComponent(context),
       body: Text("Pagina de sueño"),
     );
   }

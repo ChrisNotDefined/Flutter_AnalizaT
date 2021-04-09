@@ -2,7 +2,6 @@ import 'package:exFinal_analiza_T/src/components/AdviceComponent.dart';
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:flutter/material.dart';
-import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 
 class RecommendationsPage extends StatelessWidget {
   const RecommendationsPage({Key key}) : super(key: key);
@@ -17,7 +16,7 @@ class RecommendationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarComponent(),
+      appBar: appBarComponent(context),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10.0),
         child: Column(
@@ -32,16 +31,25 @@ class RecommendationsPage extends StatelessWidget {
             AdviceComponent(
               title: 'EJERCICIO',
               image: NetworkImage(_sportUrl),
+              onTap: () {
+                Navigator.pushNamed(context, 'exercise');
+              },
             ),
             SizedBox(height: 20),
             AdviceComponent(
               title: 'SUEÑO',
               image: NetworkImage(_sleepUrl),
+              onTap: () {
+                Navigator.pushNamed(context, 'sleep');
+              },
             ),
             SizedBox(height: 20),
             AdviceComponent(
               title: 'DIETA',
               image: NetworkImage(_dietUrl),
+              onTap: () {
+                Navigator.pushNamed(context, 'diet');
+              },
             )
           ],
         ),

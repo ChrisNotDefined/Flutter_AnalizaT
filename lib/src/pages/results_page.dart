@@ -8,7 +8,7 @@ class ResultsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarComponent(),
+      appBar: appBarComponent(context),
       body: ButtonComponent(
         child: Text('Recomendaciones'),
         onPressed: () {
