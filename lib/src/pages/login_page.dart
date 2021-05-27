@@ -7,34 +7,44 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBarComponent(context),
+        appBar: PreferredSize(
+          child: AppBarComponent(),
+          preferredSize: const Size(double.infinity, kToolbarHeight),
+        ),
         body: Container(
-          padding: EdgeInsets.all(10.0),
+          height: 600,
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               InputComponent(text: 'Username'),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               InputComponent(
                 text: 'Password',
                 isPassword: true,
               ),
-              SizedBox(
-                height: 20,
+              SizedBox(height: 20),
+              Container(
+                margin: EdgeInsets.only(bottom: 20.0),
+                height: 50.0,
+                width: 160.0,
+                child: ButtonComponent(
+                  child: Text('Login', style: TextStyle(fontSize: 25.0)),
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'test');
+                  },
+                ),
               ),
-              ButtonComponent(
-                child: Text('Login'),
-                onPressed: () {
-                  Navigator.pushNamed(context, 'test');
-                },
-              ),
-              ButtonComponent(
-                child: Text('Register'),
-                onPressed: () {
-                  Navigator.pushNamed(context, 'register');
-                },
+              Container(
+                height: 50.0,
+                width: 160.0,
+                child: ButtonComponent(
+                  child: Text('Register', style: TextStyle(fontSize: 25.0)),
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'register');
+                  },
+                ),
               ),
             ],
           ),

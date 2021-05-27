@@ -16,43 +16,76 @@ class RecommendationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarComponent(context),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Colesterol\nTrigliceridos\n...'),
-            Text(
-              'Tips',
-              style: _subTitle(),
-            ),
-            SizedBox(height: 20),
-            AdviceComponent(
-              title: 'EJERCICIO',
-              image: NetworkImage(_sportUrl),
-              onTap: () {
-                Navigator.pushNamed(context, 'exercise');
-              },
-            ),
-            SizedBox(height: 20),
-            AdviceComponent(
-              title: 'SUEÑO',
-              image: NetworkImage(_sleepUrl),
-              onTap: () {
-                Navigator.pushNamed(context, 'sleep');
-              },
-            ),
-            SizedBox(height: 20),
-            AdviceComponent(
-              title: 'DIETA',
-              image: NetworkImage(_dietUrl),
-              onTap: () {
-                Navigator.pushNamed(context, 'diet');
-              },
-            )
-          ],
+      appBar: PreferredSize(
+        child: AppBarComponent(),
+        preferredSize: const Size(double.infinity, kToolbarHeight),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TipsList(),
+              Text('Tips', style: _subTitle()),
+              SizedBox(height: 20),
+              AdviceComponent(
+                title: 'EJERCICIO',
+                image: NetworkImage(_sportUrl),
+                onTap: () {
+                  Navigator.pushNamed(context, 'exercise');
+                },
+              ),
+              SizedBox(height: 20),
+              AdviceComponent(
+                title: 'SUEÑO',
+                image: NetworkImage(_sleepUrl),
+                onTap: () {
+                  Navigator.pushNamed(context, 'sleep');
+                },
+              ),
+              SizedBox(height: 20),
+              AdviceComponent(
+                title: 'DIETA',
+                image: NetworkImage(_dietUrl),
+                onTap: () {
+                  Navigator.pushNamed(context, 'diet');
+                },
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class TipsList extends StatelessWidget {
+  const TipsList({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    TextStyle recomendation = TextStyle(
+      fontSize: 20.0,
+    );
+
+    return Container(
+      padding: EdgeInsets.only(bottom: 20.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Colesterol:', style: recomendation),
+          Text('Triglicéridos:', style: recomendation),
+          Text('Ácido Úrico:', style: recomendation),
+          Text('Glucosa:', style: recomendation),
+          Text('Glóbulos Rojos: ', style: recomendation),
+          Text('Glóbulos Blancos: ', style: recomendation),
+          Text('Hemoglobina: ', style: recomendation),
+          Text('Plaquetas:', style: recomendation),
+        ],
       ),
     );
   }
@@ -60,7 +93,5 @@ class RecommendationsPage extends StatelessWidget {
 
 TextStyle _subTitle() {
   return TextStyle(
-      fontSize: 30,
-      color: Color(MyColors.accentColor),
-      fontWeight: FontWeight.bold);
+      fontSize: 30, color: MyColors.accentColor, fontWeight: FontWeight.bold);
 }

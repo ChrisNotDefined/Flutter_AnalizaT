@@ -12,8 +12,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Analiza-T",
-      theme: ThemeData(
-        primaryColor: Color(MyColors.primaryColor),
+      theme: ThemeData.light().copyWith(
+        inputDecorationTheme: InputDecorationTheme(
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: MyColors.accentColor, width: 4.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: MyColors.accentColor, width: 1.0),
+          ),
+          labelStyle: TextStyle(color: MyColors.accentColor),
+          fillColor: Colors.white,
+          filled: true,
+        ),
+        primaryColor: MyColors.primaryColor,
+        accentColor: MyColors.accentColor,
+        textSelectionTheme: TextSelectionThemeData(
+          selectionColor: MyColors.primaryColor,
+          cursorColor: MyColors.accentColor,
+          selectionHandleColor: MyColors.accentColor,
+        ),
+        scaffoldBackgroundColor: MyColors.backgroundColor,
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',

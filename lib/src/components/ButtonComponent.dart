@@ -11,7 +11,13 @@ class ButtonComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       child: child,
-      style: buttonStyle(),
+      style: ElevatedButton.styleFrom(
+        primary: MyColors.primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: BorderSide(width: 2.0, color: MyColors.accentColor),
+        ),
+      ),
       onPressed: onPressed,
     );
   }
@@ -19,12 +25,14 @@ class ButtonComponent extends StatelessWidget {
 
 ButtonStyle buttonStyle() {
   return ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(
-        Color(MyColors.primaryColor),
-      ),
-      textStyle: MaterialStateProperty.all<TextStyle>(
-        TextStyle(color: Colors.white),
-      ),
-      side: MaterialStateProperty.all<BorderSide>(
-          BorderSide(width: 3.0, color: Color(MyColors.accentColor))));
+    backgroundColor: MaterialStateProperty.all<Color>(
+      MyColors.primaryColor,
+    ),
+    textStyle: MaterialStateProperty.all<TextStyle>(
+      TextStyle(color: Colors.white),
+    ),
+    side: MaterialStateProperty.all<BorderSide>(
+      BorderSide(width: 3.0, color: MyColors.accentColor),
+    ),
+  );
 }

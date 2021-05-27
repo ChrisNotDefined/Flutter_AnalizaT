@@ -9,8 +9,12 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBarComponent(context),
+        appBar: PreferredSize(
+          child: AppBarComponent(),
+          preferredSize: const Size(double.infinity, kToolbarHeight),
+        ),
         body: Container(
+          alignment: Alignment.center,
           padding: EdgeInsets.all(10.0),
           child: Column(
             children: [
@@ -23,9 +27,15 @@ class RegisterPage extends StatelessWidget {
                 isPassword: true,
               ),
               SizedBox(height: 20),
-              ButtonComponent(
-                child: Text('Registrarse'),
-                onPressed: () {},
+              Container(
+                height: 50.0,
+                width: 160.0,
+                child: ButtonComponent(
+                  child: Text('Registrarse', style: TextStyle(fontSize: 25.0)),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '');
+                  },
+                ),
               ),
             ],
           ),
