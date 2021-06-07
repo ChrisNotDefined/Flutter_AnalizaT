@@ -10,7 +10,7 @@ import 'package:exFinal_analiza_T/src/pages/diet_page.dart';
 
 Map<String, WidgetBuilder> getApplicationRoutes() {
   return <String, WidgetBuilder>{
-    '/': (BuildContext context) => LoginPage(),
+    'login': (BuildContext context) => LoginPage(),
     'register': (BuildContext context) => RegisterPage(),
     'test': (BuildContext context) => TestPage(),
     'results': (BuildContext context) => ResultsPage(),

@@ -1,6 +1,7 @@
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/components/InputComponent.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 
@@ -27,18 +28,10 @@ class TestPage extends StatelessWidget {
               FormRow(label: 'Glóbulos Rojos:'),
               FormRow(label: 'Glóbulos Blancos:'),
               FormRow(label: 'Plaquetas:'),
-              SizedBox(height:100),
-              Container(
-                height: 50.0,
-                width: 200.0,
-                child: ButtonComponent(
-                  child:
-                      Text('Ver resultados', style: TextStyle(fontSize: 25.0)),
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'results');
-                  },
-                ),
-              ),
+              SizedBox(height: 80),
+              _CalcButton(),
+              SizedBox(height: 10),
+              LogoutButton(),
             ],
           ),
         ),
@@ -46,6 +39,49 @@ class TestPage extends StatelessWidget {
     );
   }
 }
+
+class LogoutButton extends StatelessWidget {
+  const LogoutButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50.0,
+      width: 200.0,
+      child: ButtonComponent(
+        child:
+            Text('Cerrar Sesión', style: TextStyle(fontSize: 25.0)),
+        onPressed: () async {
+          await FirebaseAuth.instance.signOut();
+          Navigator.of(context).pushReplacementNamed('login');
+        },
+      ),
+    );
+  }
+}
+
+class _CalcButton extends StatelessWidget {
+  const _CalcButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50.0,
+      width: 200.0,
+      child: ButtonComponent(
+        child: Text('Ver resultados', style: TextStyle(fontSize: 25.0)),
+        onPressed: () {
+          Navigator.pushNamed(context, 'results');
+        },
+      ),
+    );
+  }
+}
+
 
 class FormRow extends StatelessWidget {
   final String label;

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "933608663273",
+    "project_id": "analizat-442d1",
+    "storage_bucket": "analizat-442d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933608663273:android:54b561336a214ad1b42878",
+        "android_client_info": {
+          "package_name": "com.devchrisap.analiza_T"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "933608663273-c37hq8sr41keeuqq58faeajk55qq14mr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTZ-Pg3LQMz2_A6LupFfRgbJfl_D999wY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "933608663273-c37hq8sr41keeuqq58faeajk55qq14mr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
