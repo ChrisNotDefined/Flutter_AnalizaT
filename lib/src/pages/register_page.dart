@@ -1,7 +1,7 @@
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
+import 'package:exFinal_analiza_T/src/components/DatePicker.dart';
 import 'package:exFinal_analiza_T/src/components/InputComponent.dart';
-import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:exFinal_analiza_T/src/utils/Validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class RegisterPage extends StatelessWidget {
       body: Container(
         alignment: Alignment.center,
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+          padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 50.0),
           child: _RegisterForm(),
         ),
       ),
@@ -172,17 +172,26 @@ class __RegisterFormState extends State<_RegisterForm> {
   }
 
   Widget _datePicker(BuildContext context) {
-    return ElevatedButton(
-        child: Text("Select Date"),
-        onPressed: () => {
-              showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(1920),
-                      lastDate: DateTime.now())
-                  .then((date) => setState(() {
-                        _date = date;
-                      }))
-            });
+    // return ElevatedButton(
+    //     child: Text("Select Date"),
+    //     onPressed: () => {
+    //           showDatePicker(
+    //                   context: context,
+    //                   initialDate: DateTime.now(),
+    //                   firstDate: DateTime(1920),
+    //                   lastDate: DateTime.now())
+    //               .then((date) => setState(() {
+    //                     _date = date;
+    //                   }))
+    //         });
+
+    return DatePicker(
+      initialDate: DateTime.now(),
+      onDateSelected: (date) {
+        setState(() {
+          _date = date;
+        });
+      },
+    );
   }
 }

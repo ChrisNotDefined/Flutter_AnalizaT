@@ -22,17 +22,3 @@ class ButtonComponent extends StatelessWidget {
     );
   }
 }
-
-ButtonStyle buttonStyle() {
-  return ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(
-      MyColors.primaryColor,
-    ),
-    textStyle: MaterialStateProperty.all<TextStyle>(
-      TextStyle(color: Colors.white),
-    ),
-    side: MaterialStateProperty.all<BorderSide>(
-      BorderSide(width: 3.0, color: MyColors.accentColor),
-    ),
-  );
-}

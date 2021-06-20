@@ -1,11 +1,9 @@
-import 'package:exFinal_analiza_T/src/providers/ApplicationState.dart';
 import 'package:exFinal_analiza_T/src/utils/Validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/InputComponent.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   @override
