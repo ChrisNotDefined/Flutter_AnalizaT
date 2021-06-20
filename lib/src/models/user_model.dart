@@ -8,7 +8,7 @@ String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
   UserModel({
-    this.id,
+    this.id = '',
     this.nombre = '',
     this.correo = '',
     this.sexo = '',
@@ -34,7 +34,6 @@ class UserModel {
 
   // toma el modelo y lo transforma a json
   Map<String, dynamic> toJson() => {
-        "_id": id,
         "nombre": nombre,
         "correo": correo,
         "sexo": sexo,

@@ -52,7 +52,6 @@ class ResultModel {
 
   // toma el modelo y lo transforma a json
   Map<String, dynamic> toJson() => {
-        "_id": id,
         "id_usuario": id_usuario,
         "Trigliceridos": trigliceridos,
         "GlobulosRojos": globulosRojos,

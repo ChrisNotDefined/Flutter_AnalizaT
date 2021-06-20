@@ -33,7 +33,6 @@ class RegisterModel {
 
   // toma el modelo y lo transforma a json
   Map<String, dynamic> toJson() => {
-        "_id": id,
         "peso": peso,
         "estatura": estatura,
         "cintura": cintura,
