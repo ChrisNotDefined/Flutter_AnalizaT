@@ -13,6 +13,7 @@ class UserModel {
     this.correo = '',
     this.sexo = '',
     this.fecha_nacimiento = '',
+    this.registros,
   });
 
   String id;
@@ -20,15 +21,16 @@ class UserModel {
   String correo;
   String sexo;
   String fecha_nacimiento;
+  List<String> registros;
 
   // Recibe mapa y regresa nueva intancia por eso factory
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        id: json["_id"],
-        nombre: json["nombre"],
-        correo: json["correo"],
-        sexo: json["sexo"],
-        fecha_nacimiento: json["fecha_nacimiento"],
-      );
+      id: json["_id"],
+      nombre: json["nombre"],
+      correo: json["correo"],
+      sexo: json["sexo"],
+      fecha_nacimiento: json["fecha_nacimiento"],
+      registros: json["registros"]);
 
   // toma el modelo y lo transforma a json
   Map<String, dynamic> toJson() => {
@@ -37,5 +39,6 @@ class UserModel {
         "correo": correo,
         "sexo": sexo,
         "fecha_nacimiento": fecha_nacimiento,
+        "registros": registros
       };
 }
