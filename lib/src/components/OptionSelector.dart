@@ -24,13 +24,13 @@ class OptionSelector<T> extends StatelessWidget {
           borderRadius: BorderRadius.circular(5.0),
           border: Border.all(color: MyColors.accentColor, width: 1)),
       child: DropdownButton<T>(
-        style: TextStyle(color: MyColors.accentColor),
+        style: TextStyle(color: MyColors.accentColor, fontSize: 18.0),
         value: value,
         icon: Icon(Icons.arrow_drop_down_sharp, color: MyColors.accentColor),
         iconSize: 24,
         elevation: 16,
         isExpanded: true,
-        dropdownColor: MyColors.backgroundColor,
+        dropdownColor: MyColors.primaryLight,
         underline: Container(
           height: 2,
           color: MyColors.accentColor,

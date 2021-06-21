@@ -17,13 +17,11 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     String _initialRoute = 'login';
 
-    if(FirebaseAuth.instance.currentUser != null) {
+    if (FirebaseAuth.instance.currentUser != null) {
       _initialRoute = 'test';
     }
 
@@ -41,10 +39,8 @@ class MyApp extends StatelessWidget {
     );
   }
 
-
-
   ThemeData _appThemeData() {
-    return ThemeData.light().copyWith(
+    return ThemeData(
       inputDecorationTheme: InputDecorationTheme(
         contentPadding: EdgeInsets.all(10.0),
         border: OutlineInputBorder(),
@@ -64,7 +60,8 @@ class MyApp extends StatelessWidget {
       ),
       primaryColor: MyColors.primaryColor,
       accentColor: MyColors.accentColor,
-      
+      splashColor: MyColors.primaryColor,
+      primarySwatch: Colors.pink,
       textSelectionTheme: TextSelectionThemeData(
         selectionColor: MyColors.primaryColor,
         cursorColor: MyColors.accentColor,
