@@ -4,11 +4,8 @@ import '../models/result_model.dart';
 import '../models/register_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:core';
-import 'package:mime_type/mime_type.dart';
-import 'package:http_parser/http_parser.dart';
-import 'dart:io';
 
-final String _url = "https://limitless-bayou-74846.herokuapp.com";
+final String _url = "limitless-bayou-74846.herokuapp.com";
 
 class UserProvider {
   Future<List<UserModel>> getUsers() async {
@@ -16,7 +13,7 @@ class UserProvider {
     final resp = await http.get(url);
 
     final Map<String, dynamic> decodeData = json.decode(resp.body);
-    final List<UserModel> users = new List();
+    final List<UserModel> users = [];
 
     if (decodeData == null) return [];
 
@@ -37,7 +34,7 @@ class UserProvider {
     final resp = await http.get(url);
 
     final Map<String, dynamic> decodeData = json.decode(resp.body);
-    final List<UserModel> users = new List();
+    final List<UserModel> users = [];
 
     if (decodeData == null) return [];
 
@@ -53,25 +50,52 @@ class UserProvider {
   Future<bool> postUser(UserModel user) async {
     final url = Uri.https(_url, '/users/${user.id}');
 
-    final resp = await http.post(url, body: userModelToJson(user));
+    try {
+      final body = userModelToJson(user);
+      print('Body: $body');
+      final resp = await http.post(
+        url,
+        body: userModelToJson(user),
+        headers: {'content-type': 'application/json'},
+      );
 
-    final decodeData = json.decode(resp.body);
+      if (resp.statusCode < 200 || resp.statusCode >= 300) {
+        print('Server returned ${resp.statusCode}');
+        return false;
+      }
 
-    print(decodeData);
+      final decodeData = json.decode(resp.body);
 
-    return true;
+      print(decodeData);
+
+      return true;
+    } catch (e) {
+      print('ERROR POSTING');
+      print(e);
+      return false;
+    }
   }
 
   Future<bool> putUser(UserModel user) async {
     final url = Uri.https(_url, '/users/${user.id}');
 
-    final resp = await http.put(url, body: userModelToJson(user));
+    try {
+      final resp = await http.put(
+        url,
+        body: userModelToJson(user),
+        headers: {'content-type': 'application/json'},
+      );
 
-    final decodeData = json.decode(resp.body);
+      final decodeData = json.decode(resp.body);
 
-    print(decodeData);
+      print(decodeData);
 
-    return true;
+      return true;
+    } catch (e) {
+      print('ERROR PUTTING');
+      print(e);
+      return false;
+    }
   }
 
   Future<int> deleteUser(String userId) async {
@@ -90,7 +114,7 @@ class ResultProvider {
     final resp = await http.get(url);
 
     final Map<String, dynamic> decodeData = json.decode(resp.body);
-    final List<ResultModel> results = new List();
+    final List<ResultModel> results = [];
 
     if (decodeData == null) return [];
 
@@ -111,7 +135,7 @@ class ResultProvider {
     final resp = await http.get(url);
 
     final Map<String, dynamic> decodeData = json.decode(resp.body);
-    final List<ResultModel> results = new List();
+    final List<ResultModel> results = [];
 
     if (decodeData == null) return [];
 
@@ -125,9 +149,13 @@ class ResultProvider {
   }
 
   Future<bool> postResult(ResultModel result) async {
-    final url = Uri.https(_url, '/results/${result.id_usuario}');
+    final url = Uri.https(_url, '/results/${result.idUsuario}');
 
-    final resp = await http.post(url, body: resultModelToJson(result));
+    final resp = await http.post(
+      url,
+      body: resultModelToJson(result),
+      headers: {'content-type': 'application/json'},
+    );
 
     final decodeData = json.decode(resp.body);
 
@@ -137,7 +165,7 @@ class ResultProvider {
   }
 
   Future<bool> putResult(ResultModel result) async {
-    final url = Uri.https(_url, '/results/${result.id_usuario}');
+    final url = Uri.https(_url, '/results/${result.idUsuario}');
 
     final resp = await http.put(url, body: resultModelToJson(result));
 
@@ -164,7 +192,7 @@ class RegisterProvider {
     final resp = await http.get(url);
 
     final Map<String, dynamic> decodeData = json.decode(resp.body);
-    final List<RegisterModel> registers = new List();
+    final List<RegisterModel> registers = [];
 
     if (decodeData == null) return [];
 
@@ -182,7 +210,7 @@ class RegisterProvider {
     final resp = await http.get(url);
 
     final Map<String, dynamic> decodeData = json.decode(resp.body);
-    final List<RegisterModel> registers = new List();
+    final List<RegisterModel> registers = [];
 
     if (decodeData == null) return [];
 
@@ -198,7 +226,11 @@ class RegisterProvider {
   Future<bool> postRegister(RegisterModel register, String userId) async {
     final url = Uri.https(_url, '/results/$userId');
 
-    final resp = await http.post(url, body: registerModelToJson(register));
+    final resp = await http.post(
+      url,
+      body: registerModelToJson(register),
+      headers: {'content-type': 'application/json'},
+    );
 
     final decodeData = json.decode(resp.body);
 

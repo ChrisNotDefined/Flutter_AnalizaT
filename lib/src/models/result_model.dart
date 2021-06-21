@@ -17,7 +17,7 @@ class ColesterolModel {
 class ResultModel {
   ResultModel(
       {this.id = '',
-      this.id_usuario = '',
+      this.idUsuario = '',
       this.trigliceridos = 0.0,
       this.globulosRojos = 0.0,
       this.globulosBlancos = 0.0,
@@ -28,7 +28,7 @@ class ResultModel {
       this.colesterol});
 
   String id;
-  String id_usuario;
+  String idUsuario;
   double trigliceridos;
   double globulosRojos;
   double globulosBlancos;
@@ -41,7 +41,7 @@ class ResultModel {
   // Recibe mapa y regresa nueva intancia por eso factory
   factory ResultModel.fromJson(Map<String, dynamic> json) => ResultModel(
       id: json["_id"],
-      id_usuario: json["id_usuario"],
+      idUsuario: json["id_usuario"],
       trigliceridos: json["Trigliceridos"],
       globulosRojos: json["GlobulosRojos"],
       globulosBlancos: json["GlobulosBlancos"],
@@ -52,7 +52,7 @@ class ResultModel {
 
   // toma el modelo y lo transforma a json
   Map<String, dynamic> toJson() => {
-        "id_usuario": id_usuario,
+        "id_usuario": idUsuario,
         "Trigliceridos": trigliceridos,
         "GlobulosRojos": globulosRojos,
         "GlobulosBlancos": globulosBlancos,

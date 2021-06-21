@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -34,11 +36,12 @@ class _DatePickerState extends State<DatePicker> {
 
   Future<void> _showPicker(context) async {
     DateTime dateSelected = await showDatePicker(
-        context: context,
-        initialDate: this.widget.initialDate,
-        firstDate: widget.firstDate,
-        lastDate: widget.lastDate,
-        initialDatePickerMode: DatePickerMode.year);
+      context: context,
+      initialDate: this.widget.initialDate,
+      firstDate: widget.firstDate,
+      lastDate: widget.lastDate,
+      initialDatePickerMode: DatePickerMode.year,
+    );
 
     if (dateSelected != null) {
       setState(() {
@@ -57,16 +60,19 @@ class _DatePickerState extends State<DatePicker> {
         );
 
     return ElevatedButton.icon(
-      icon: _wrapper(Icon(Icons.calendar_today_outlined)),
+      icon: _wrapper(Icon(
+        Icons.calendar_today_outlined,
+        color: MyColors.accentColor,
+      )),
       label: _wrapper(Text(
         "${DateFormat('dd-MM-yyyy').format(_selectedDate)}",
-        style: TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 20, color: MyColors.accentColor),
       )),
       onPressed: () {
         _showPicker(context);
       },
       style: ElevatedButton.styleFrom(
-        primary: MyColors.primaryColor,
+        primary: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
           side: BorderSide(width: 2.0, color: MyColors.accentColor),

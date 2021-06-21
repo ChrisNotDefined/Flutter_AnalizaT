@@ -5,16 +5,24 @@ bool isValidEmail(String email) {
 }
 
 String emailValidator(String email) {
-  if (email == null || email.isEmpty) return 'The field is empty';
+  String emptyMessage = isFieldEmpty(email);
+  if (emptyMessage != null) return emptyMessage;
   if (!isValidEmail(email)) return 'Not a valid email';
   return null;
 }
 
-bool minLengthPass(String password ){
-  return password.length > 6;
-}
+// bool minLengthPass(String password) {
+//   return password.length > 6;
+// }
 
 String passValidator(String password) {
+  String emptyMessage = isFieldEmpty(password);
+  if (emptyMessage != null) return emptyMessage;
   if (password.length < 6) return 'The password is too short';
+  return null;
+}
+
+String isFieldEmpty(String field) {
+  if (field.isEmpty) return 'Favor de llenar el campo';
   return null;
 }

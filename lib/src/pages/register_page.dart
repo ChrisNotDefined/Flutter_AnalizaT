@@ -2,9 +2,13 @@ import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/components/DatePicker.dart';
 import 'package:exFinal_analiza_T/src/components/InputComponent.dart';
+import 'package:exFinal_analiza_T/src/models/user_model.dart';
+import 'package:exFinal_analiza_T/src/providers/API_provider.dart';
+import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:exFinal_analiza_T/src/utils/Validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({Key key}) : super(key: key);
@@ -44,7 +48,7 @@ class __RegisterFormState extends State<_RegisterForm> {
   DateTime _date;
   String _pass;
   String _repeatPass;
-  String dropdownValue = 'M';
+  String _sex = 'Masculino';
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +58,17 @@ class __RegisterFormState extends State<_RegisterForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           InputComponent(
-            label: 'Name',
+            label: 'Nombre',
+            validator: isFieldEmpty,
             keyBoardType: TextInputType.name,
             onChange: (val) => setState(() {
               _name = val;
             }),
           ),
           SizedBox(height: 20),
-          _comboboxSex(),
+          _sexField(),
           SizedBox(height: 20),
-          _datePicker(context),
+          _birthDate(context),
           SizedBox(height: 20),
           InputComponent(
             label: 'E-mail',
@@ -75,16 +80,19 @@ class __RegisterFormState extends State<_RegisterForm> {
           ),
           SizedBox(height: 20),
           InputComponent(
-            label: 'Password',
+            label: 'Contraseña',
             isPassword: true,
-            validator: passValidator,
+            validator: (value) {
+              if (_repeatPass != value) return 'Los campos son distintos';
+              return passValidator(value);
+            },
             onChange: (val) => setState(() {
               _pass = val;
             }),
           ),
           SizedBox(height: 20),
           InputComponent(
-            label: 'Confirm Password',
+            label: 'Repetir Contraseña',
             isPassword: true,
             onChange: (val) => setState(() {
               _repeatPass = val;
@@ -114,9 +122,26 @@ class __RegisterFormState extends State<_RegisterForm> {
         child: Text('Register', style: TextStyle(fontSize: 25.0)),
         onPressed: () async {
           if (_formKey.currentState.validate()) {
+            _formKey.currentState.save();
+
             try {
-              await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: _email, password: _pass);
+              UserCredential cred = await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                      email: _email, password: _pass);
+
+              String formatedDate = DateFormat('dd-MM-yyyy').format(_date);
+              UserModel user = UserModel(
+                id: cred.user.uid,
+                correo: _email,
+                nombre: _name,
+                fechaNacimiento: formatedDate,
+                sexo: _sex,
+              );
+
+              bool result = await UserProvider().postUser(user);
+
+              if (!result) return;
+
               Navigator.pushNamed(context, 'test');
             } catch (e) {
               print(e);
@@ -140,58 +165,102 @@ class __RegisterFormState extends State<_RegisterForm> {
     );
   }
 
-  Widget _comboboxSex() {
+  Widget _sexField() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Genero:"),
-        DropdownButton<String>(
-          value: dropdownValue,
-          icon: const Icon(Icons.arrow_downward),
-          iconSize: 24,
-          elevation: 16,
-          style: const TextStyle(color: Colors.deepPurple),
-          underline: Container(
-            height: 2,
-            color: Colors.deepPurpleAccent,
+        Text(
+          "Sexo:",
+          style: TextStyle(fontSize: 18, color: MyColors.accentColor),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width / 3,
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+              border: Border.all(color: MyColors.accentColor, width: 2)),
+          child: DropdownButton<String>(
+            style: TextStyle(color: MyColors.accentColor),
+            value: _sex,
+            icon:
+                Icon(Icons.arrow_drop_down_sharp, color: MyColors.accentColor),
+            iconSize: 24,
+            elevation: 16,
+            dropdownColor: MyColors.backgroundColor,
+            underline: Container(
+              height: 2,
+              color: MyColors.accentColor,
+            ),
+            onChanged: (String newValue) {
+              setState(() {
+                _sex = newValue;
+              });
+            },
+            items: <String>['Masculino', 'Femenino']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
           ),
-          onChanged: (String newValue) {
-            setState(() {
-              dropdownValue = newValue;
-            });
-          },
-          items:
-              <String>['M', 'F'].map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
         )
       ],
     );
   }
 
-  Widget _datePicker(BuildContext context) {
-    // return ElevatedButton(
-    //     child: Text("Select Date"),
-    //     onPressed: () => {
-    //           showDatePicker(
-    //                   context: context,
-    //                   initialDate: DateTime.now(),
-    //                   firstDate: DateTime(1920),
-    //                   lastDate: DateTime.now())
-    //               .then((date) => setState(() {
-    //                     _date = date;
-    //                   }))
-    //         });
-
-    return DatePicker(
-      initialDate: DateTime.now(),
-      onDateSelected: (date) {
-        setState(() {
-          _date = date;
-        });
+  Widget _birthDate(BuildContext context) {
+    return FormField<DateTime>(
+      validator: (value) {
+        if (value == null) return 'No hay una fecha seleccionada';
+        return null;
       },
+      builder: (state) {
+        return _dateField(state);
+      },
+    );
+  }
+
+  Container _dateField(FormFieldState<DateTime> state) {
+    Widget _errorField(FormFieldState<DateTime> state) {
+      if (state.hasError)
+        return Container(
+          padding: EdgeInsets.only(top: 10.0),
+          child: Text(
+            state.errorText,
+            style: TextStyle(color: Colors.red),
+          ),
+        );
+
+      return Container();
+    }
+
+    return Container(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Fecha de Nacimiento',
+            style: TextStyle(
+              fontSize: 18,
+              color: MyColors.accentColor,
+            ),
+          ),
+          SizedBox(height: 10.0),
+          DatePicker(
+            initialDate: DateTime.now(),
+            onDateSelected: (date) {
+              state.didChange(date);
+              setState(() {
+                _date = date;
+              });
+            },
+          ),
+          _errorField(state)
+        ],
+      ),
     );
   }
 }

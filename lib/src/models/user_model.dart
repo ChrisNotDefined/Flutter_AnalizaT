@@ -12,7 +12,7 @@ class UserModel {
     this.nombre = '',
     this.correo = '',
     this.sexo = '',
-    this.fecha_nacimiento = '',
+    this.fechaNacimiento = '',
     this.registros,
   });
 
@@ -20,7 +20,7 @@ class UserModel {
   String nombre;
   String correo;
   String sexo;
-  String fecha_nacimiento;
+  String fechaNacimiento;
   List<String> registros;
 
   // Recibe mapa y regresa nueva intancia por eso factory
@@ -29,7 +29,7 @@ class UserModel {
       nombre: json["nombre"],
       correo: json["correo"],
       sexo: json["sexo"],
-      fecha_nacimiento: json["fecha_nacimiento"],
+      fechaNacimiento: json["fecha_nacimiento"],
       registros: json["registros"]);
 
   // toma el modelo y lo transforma a json
@@ -37,7 +37,7 @@ class UserModel {
         "nombre": nombre,
         "correo": correo,
         "sexo": sexo,
-        "fecha_nacimiento": fecha_nacimiento,
+        "fecha_nacimiento": fechaNacimiento,
         "registros": registros
       };
 }
