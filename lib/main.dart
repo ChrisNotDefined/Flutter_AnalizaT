@@ -12,11 +12,12 @@ void main() async {
   await Firebase.initializeApp();
   runApp(ChangeNotifierProvider(
     child: MyApp(),
-    create: (context) => ApplicationState(),
+    create: (context) => ApplicationState(context),
   ));
 }
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
 

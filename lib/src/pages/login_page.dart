@@ -1,3 +1,4 @@
+import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:exFinal_analiza_T/src/utils/Validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -88,6 +89,14 @@ class _LoginFormState extends State<_LoginForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Text(
+            'Inicia Sesión',
+            style: TextStyle(
+              fontSize: 30.0,
+              color: MyColors.accentColor,
+            ),
+          ),
+          SizedBox(height: 30),
           InputComponent(
             label: 'E-mail',
             validator: emailValidator,

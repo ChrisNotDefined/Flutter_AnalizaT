@@ -74,8 +74,8 @@ class _DatePickerState extends State<DatePicker> {
       style: ElevatedButton.styleFrom(
         primary: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          side: BorderSide(width: 2.0, color: MyColors.accentColor),
+          borderRadius: BorderRadius.circular(5.0),
+          side: BorderSide(width: 1.0, color: MyColors.accentColor),
         ),
       ),
     );

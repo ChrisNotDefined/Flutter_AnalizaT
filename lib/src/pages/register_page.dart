@@ -2,6 +2,7 @@ import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/components/DatePicker.dart';
 import 'package:exFinal_analiza_T/src/components/InputComponent.dart';
+import 'package:exFinal_analiza_T/src/components/OptionSelector.dart';
 import 'package:exFinal_analiza_T/src/models/user_model.dart';
 import 'package:exFinal_analiza_T/src/providers/API_provider.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
@@ -23,7 +24,7 @@ class RegisterPage extends StatelessWidget {
       body: Container(
         alignment: Alignment.center,
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 50.0),
+          padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 25.0),
           child: _RegisterForm(),
         ),
       ),
@@ -48,7 +49,7 @@ class __RegisterFormState extends State<_RegisterForm> {
   DateTime _date;
   String _pass;
   String _repeatPass;
-  String _sex = 'Masculino';
+  String _sex = 'masculino';
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +58,14 @@ class __RegisterFormState extends State<_RegisterForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Text(
+            'Registro',
+            style: TextStyle(
+              fontSize: 30.0,
+              color: MyColors.accentColor,
+            ),
+          ),
+          SizedBox(height: 30),
           InputComponent(
             label: 'Nombre',
             validator: isFieldEmpty,
@@ -114,40 +123,41 @@ class __RegisterFormState extends State<_RegisterForm> {
     );
   }
 
+  Future<void> _registerUser() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+
+      try {
+        UserCredential cred = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: _email, password: _pass);
+
+        String formatedDate = DateFormat('dd-MM-yyyy').format(_date);
+        UserModel user = UserModel(
+          id: cred.user.uid,
+          correo: _email,
+          nombre: _name,
+          fechaNacimiento: formatedDate,
+          sexo: _sex,
+        );
+
+        bool result = await UserProvider().postUser(user);
+
+        if (!result) return;
+
+        Navigator.pushNamed(context, 'test');
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
   Widget _registerButton() {
     return Container(
       height: 50.0,
-      width: 160.0,
+      width: 200.0,
       child: ButtonComponent(
-        child: Text('Register', style: TextStyle(fontSize: 25.0)),
-        onPressed: () async {
-          if (_formKey.currentState.validate()) {
-            _formKey.currentState.save();
-
-            try {
-              UserCredential cred = await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
-                      email: _email, password: _pass);
-
-              String formatedDate = DateFormat('dd-MM-yyyy').format(_date);
-              UserModel user = UserModel(
-                id: cred.user.uid,
-                correo: _email,
-                nombre: _name,
-                fechaNacimiento: formatedDate,
-                sexo: _sex,
-              );
-
-              bool result = await UserProvider().postUser(user);
-
-              if (!result) return;
-
-              Navigator.pushNamed(context, 'test');
-            } catch (e) {
-              print(e);
-            }
-          }
-        },
+        child: Text('Registrarse', style: TextStyle(fontSize: 25.0)),
+        onPressed: _registerUser,
       ),
     );
   }
@@ -155,9 +165,9 @@ class __RegisterFormState extends State<_RegisterForm> {
   Widget _loginButton() {
     return Container(
       height: 50.0,
-      width: 160.0,
+      width: 200.0,
       child: ButtonComponent(
-        child: Text('Login', style: TextStyle(fontSize: 25.0)),
+        child: Text('Iniciar Sesión', style: TextStyle(fontSize: 25.0)),
         onPressed: () {
           Navigator.pushReplacementNamed(context, 'login');
         },
@@ -166,6 +176,9 @@ class __RegisterFormState extends State<_RegisterForm> {
   }
 
   Widget _sexField() {
+    // Label
+    // Values
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -173,37 +186,16 @@ class __RegisterFormState extends State<_RegisterForm> {
           "Sexo:",
           style: TextStyle(fontSize: 18, color: MyColors.accentColor),
         ),
-        Container(
-          width: MediaQuery.of(context).size.width / 3,
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5.0),
-              border: Border.all(color: MyColors.accentColor, width: 2)),
-          child: DropdownButton<String>(
-            style: TextStyle(color: MyColors.accentColor),
+        SizedBox(width: 10.0),
+        Expanded(
+          child: OptionSelector<String>(
             value: _sex,
-            icon:
-                Icon(Icons.arrow_drop_down_sharp, color: MyColors.accentColor),
-            iconSize: 24,
-            elevation: 16,
-            dropdownColor: MyColors.backgroundColor,
-            underline: Container(
-              height: 2,
-              color: MyColors.accentColor,
-            ),
+            options: {'Masculino': 'masculino', 'Femenino': 'femenino'},
             onChanged: (String newValue) {
               setState(() {
                 _sex = newValue;
               });
             },
-            items: <String>['Masculino', 'Femenino']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
           ),
         )
       ],
