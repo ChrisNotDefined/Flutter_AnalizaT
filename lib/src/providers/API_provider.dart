@@ -137,21 +137,33 @@ class ResultProvider {
   }
 
   Future<ResultModel> getResultByUserId(String userId) async {
-    final url = Uri.https(
-      _url,
-      "/results/$userId",
-    );
-    final resp = await http.get(url);
+    try {
+      final url = Uri.https(
+        _url,
+        "/results/$userId",
+      );
 
-    final Map<String, dynamic> decodeData = json.decode(resp.body);
-    ResultModel result;
+      final resp = await http.get(url);
 
-    if (decodeData == null) return null;
+      if (resp.statusCode != 200) {
+        print("Server responded ${resp.statusCode}");
+        return null;
+      }
 
-    result = ResultModel.fromJson(decodeData);
+      if (resp.body.isEmpty) return null;
 
-    print(result);
-    return result;
+      final Map<String, dynamic> decodeData = json.decode(resp.body);
+      ResultModel result;
+
+      result = ResultModel.fromJson(decodeData);
+
+      print(result);
+      return result;
+    } catch (e) {
+      print('======FAILED TO GET RES BY USERID======');
+      print(e);
+      return null;
+    }
   }
 
   Future<bool> postResult(ResultModel result) async {
@@ -171,15 +183,32 @@ class ResultProvider {
   }
 
   Future<bool> putResult(ResultModel result) async {
-    final url = Uri.https(_url, '/results/${result.idUsuario}');
+    try {
+      final url = Uri.https(_url, '/results/${result.idUsuario}');
 
-    final resp = await http.put(url, body: resultModelToJson(result));
+      final resp = await http.put(
+        url,
+        body: resultModelToJson(result),
+        headers: {'content-type': 'application/json'},
+      );
 
-    final decodeData = json.decode(resp.body);
+      if (resp.statusCode != 200) {
+        print('Server responded wih ${resp.statusCode}');
+      }
 
-    print(decodeData);
+      if (resp.body.isEmpty) {
+        print('EmptyBody');
+        return false;
+      }
 
-    return true;
+      // final decodeData = json.decode(resp.body);
+
+      return true;
+    } catch (e) {
+      print("FAILED PUTRESULT");
+      print(e);
+      return false;
+    }
   }
 
   Future<int> deleteResult(String resultId) async {
@@ -229,19 +258,30 @@ class RegisterProvider {
   }
 
   Future<bool> postRegister(RegisterModel register, String userId) async {
-    final url = Uri.https(_url, '/results/$userId');
+    try {
+      final url = Uri.https(_url, '/registers/$userId');
 
-    final resp = await http.post(
-      url,
-      body: registerModelToJson(register),
-      headers: {'content-type': 'application/json'},
-    );
+      final resp = await http.post(
+        url,
+        body: registerModelToJson(register),
+        headers: {'content-type': 'application/json'},
+      );
 
-    final decodeData = json.decode(resp.body);
+      if (resp.statusCode != 200) {
+        print('Server responded ${resp.statusCode}');
+        return false;
+      }
 
-    print(decodeData);
+      final decodeData = json.decode(resp.body);
 
-    return true;
+      print(decodeData);
+
+      return true;
+    } catch (e) {
+      print("========FAILED TO POST REGISTER=======");
+      print(e);
+      return false;
+    }
   }
 
   Future<int> deleteRegister(String userId) async {

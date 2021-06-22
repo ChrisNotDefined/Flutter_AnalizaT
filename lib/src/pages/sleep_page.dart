@@ -1,6 +1,7 @@
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class SleepPage extends StatelessWidget {
   const SleepPage({Key key}) : super(key: key);
@@ -11,6 +12,17 @@ class SleepPage extends StatelessWidget {
         color: MyColors.accentColor,
         fontWeight: FontWeight.bold,
         fontSize: 16.0);
+
+    Widget videoView = Container(
+      height: 315,
+      child: WebView(
+        initialUrl: Uri.dataFromString(
+                '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/TWXfHWVl2ik" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>',
+                mimeType: 'text/html')
+            .toString(),
+        javascriptMode: JavascriptMode.unrestricted,
+      ),
+    );
 
     return Scaffold(
       appBar: PreferredSize(
@@ -36,7 +48,8 @@ class SleepPage extends StatelessWidget {
           Text('9. No repose en la cama despierto.', style: label),
           Text(
               '10. Consulte a un médico si continúa teniendo problemas para dormir.',
-              style: label)
+              style: label),
+          videoView,
         ],
       ),
     );

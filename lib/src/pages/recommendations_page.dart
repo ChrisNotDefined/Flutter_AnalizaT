@@ -67,25 +67,10 @@ class TipsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle recomendation = TextStyle(
-      fontSize: 20.0,
-    );
-
     return Container(
       padding: EdgeInsets.only(bottom: 20.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Colesterol:', style: recomendation),
-          Text('Triglicéridos:', style: recomendation),
-          Text('Ácido Úrico:', style: recomendation),
-          Text('Glucosa:', style: recomendation),
-          Text('Glóbulos Rojos: ', style: recomendation),
-          Text('Glóbulos Blancos: ', style: recomendation),
-          Text('Hemoglobina: ', style: recomendation),
-          Text('Plaquetas:', style: recomendation),
-        ],
       ),
     );
   }

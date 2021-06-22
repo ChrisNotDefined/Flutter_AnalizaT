@@ -5,7 +5,18 @@ import 'package:flutter/material.dart';
 class FormRow extends StatelessWidget {
   final String label;
   final String unit;
-  const FormRow({Key key, @required this.label, this.unit}) : super(key: key);
+  final void Function(String) onChange;
+  final String Function(String) validator;
+  final TextInputType keyBoardType;
+
+  const FormRow({
+    Key key,
+    @required this.label,
+    this.unit,
+    this.onChange,
+    this.validator,
+    this.keyBoardType,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +36,9 @@ class FormRow extends StatelessWidget {
           Expanded(
               child: InputComponent(
             label: this.unit,
+            onChange: this.onChange,
+            validator: this.validator,
+            keyBoardType: this.keyBoardType,
           ))
         ],
       ),

@@ -6,6 +6,7 @@ import 'package:exFinal_analiza_T/src/models/user_model.dart';
 import 'package:exFinal_analiza_T/src/providers/API_provider.dart';
 import 'package:exFinal_analiza_T/src/providers/ApplicationState.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
+import 'package:exFinal_analiza_T/src/utils/Validators.dart';
 import 'package:flutter/material.dart';
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,7 @@ class _TestForm extends StatefulWidget {
 class _TestState extends State<_TestForm> {
   final _formKey = new GlobalKey<FormState>();
 
+  ResultModel result = new ResultModel();
   double _hdl = 0.0;
   double _ldl = 0.0;
   double _trigliceridos = 0.0;
@@ -62,18 +64,68 @@ class _TestState extends State<_TestForm> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _cholesterolField(),
-            FormRow(label: 'Triglicéridos:', unit: 'mg / dl'),
+            FormRow(
+              label: 'Triglicéridos:',
+              unit: 'mg / dl',
+              onChange: (value) => setState(() {
+                _trigliceridos = double.tryParse(value);
+              }),
+              validator: isValidDouble,
+            ),
             FormRow(
               label: 'Ácido Úrico:',
               unit: 'mg / dl',
+              onChange: (value) => setState(() {
+                _acidoUrico = double.tryParse(value);
+              }),
+              validator: isValidDouble,
             ),
-            FormRow(label: 'Glucosa:', unit: 'mg / dl'),
-            FormRow(label: 'Glóbulos Rojos:', unit: 'millones / dl'),
-            FormRow(label: 'Glóbulos Blancos:', unit: 'miles / dl'),
-            FormRow(label: 'Plaquetas:', unit: 'miles / dl'),
-            FormRow(label: 'Hemoglobina:', unit: 'g / dl'),
+            FormRow(
+              label: 'Glucosa:',
+              unit: 'mg / dl',
+              onChange: (value) => setState(() {
+                _glucosa = double.tryParse(value);
+              }),
+              validator: isValidDouble,
+            ),
+            FormRow(
+              label: 'Glóbulos Rojos:',
+              unit: 'millones / dl',
+              onChange: (value) => setState(() {
+                _globulosRojos = double.tryParse(value);
+              }),
+              validator: isValidDouble,
+            ),
+            FormRow(
+              label: 'Glóbulos Blancos:',
+              unit: 'miles / dl',
+              onChange: (value) => setState(() {
+                _globulosBlancos = double.tryParse(value);
+              }),
+              validator: isValidDouble,
+            ),
+            FormRow(
+              label: 'Plaquetas:',
+              unit: 'miles / dl',
+              onChange: (value) => setState(() {
+                _plaquetas = double.tryParse(value);
+              }),
+              validator: isValidDouble,
+            ),
+            FormRow(
+              label: 'Hemoglobina:',
+              unit: 'g / dl',
+              onChange: (value) => setState(() {
+                _hemoglobina = double.tryParse(value);
+              }),
+              validator: isValidDouble,
+            ),
             SizedBox(height: 50),
-            _CalcButton(),
+            _CalcButton(
+              onPress: () {
+                uploadTest();
+              },
+            ),
             SizedBox(height: 10),
             _BackButton(),
           ],
@@ -89,31 +141,37 @@ class _TestState extends State<_TestForm> {
       try {
         ResultModel result = await ResultProvider().getResultByUserId(user.id);
         if (result == null) {
-          result.idUsuario = user.id;
-          result.acidoUrico = _acidoUrico;
-          result.trigliceridos = _trigliceridos;
-          result.glucosa = _glucosa;
-          result.globulosRojos = _globulosRojos;
-          result.globulosBlancos = _globulosBlancos;
-          result.plaquetas = _plaquetas;
-          result.hemoglobina = _hemoglobina;
-          result.colesterol.ldl = _ldl;
-          result.colesterol.hdl = _hdl;
-          bool response = await ResultProvider().postResult(result);
+          print("Entro al post");
+          ResultModel postResult = new ResultModel();
+          postResult.idUsuario = user.id;
+          postResult.acidoUrico = _acidoUrico;
+          postResult.trigliceridos = _trigliceridos;
+          postResult.glucosa = _glucosa;
+          postResult.globulosRojos = _globulosRojos;
+          postResult.globulosBlancos = _globulosBlancos;
+          postResult.plaquetas = _plaquetas;
+          postResult.hemoglobina = _hemoglobina;
+          postResult.colesterol = new ColesterolModel();
+          postResult.colesterol.ldl = _ldl;
+          postResult.colesterol.hdl = _hdl;
+          bool response = await ResultProvider().postResult(postResult);
 
           if (!response) return;
         } else {
-          result.acidoUrico = _acidoUrico;
-          result.trigliceridos = _trigliceridos;
-          result.glucosa = _glucosa;
-          result.globulosRojos = _globulosRojos;
-          result.globulosBlancos = _globulosBlancos;
-          result.plaquetas = _plaquetas;
-          result.hemoglobina = _hemoglobina;
-          result.colesterol.ldl = _ldl;
-          result.colesterol.hdl = _hdl;
-          bool response = await ResultProvider().putResult(result);
-
+          print("Entro al put");
+          ResultModel putResult = new ResultModel();
+          putResult.acidoUrico = _acidoUrico;
+          putResult.trigliceridos = _trigliceridos;
+          putResult.glucosa = _glucosa;
+          putResult.globulosRojos = _globulosRojos;
+          putResult.globulosBlancos = _globulosBlancos;
+          putResult.plaquetas = _plaquetas;
+          putResult.hemoglobina = _hemoglobina;
+          putResult.colesterol = new ColesterolModel();
+          putResult.colesterol.ldl = _ldl;
+          putResult.colesterol.hdl = _hdl;
+          putResult.idUsuario = user.id;
+          bool response = await ResultProvider().putResult(putResult);
           if (!response) return;
         }
         Navigator.of(context).pushNamed('results');
@@ -145,11 +203,19 @@ class _TestState extends State<_TestForm> {
               Expanded(
                   child: InputComponent(
                 label: 'HDL',
+                onChange: (value) => setState(() {
+                  _hdl = double.tryParse(value);
+                }),
+                validator: isValidDouble,
               )),
               SizedBox(width: 20.0),
               Expanded(
                   child: InputComponent(
                 label: 'LDL',
+                onChange: (value) => setState(() {
+                  _ldl = double.tryParse(value);
+                }),
+                validator: isValidDouble,
               )),
             ],
           ),
@@ -160,9 +226,8 @@ class _TestState extends State<_TestForm> {
 }
 
 class _CalcButton extends StatelessWidget {
-  const _CalcButton({
-    Key key,
-  }) : super(key: key);
+  final void Function() onPress;
+  const _CalcButton({Key key, this.onPress}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -171,9 +236,7 @@ class _CalcButton extends StatelessWidget {
       width: 200.0,
       child: ButtonComponent(
         child: Text('Ver resultados', style: TextStyle(fontSize: 25.0)),
-        onPressed: () {
-          Navigator.pushNamed(context, 'results');
-        },
+        onPressed: this.onPress,
       ),
     );
   }

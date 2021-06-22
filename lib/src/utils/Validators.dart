@@ -26,3 +26,10 @@ String isFieldEmpty(String field) {
   if (field.isEmpty) return 'Favor de llenar el campo';
   return null;
 }
+
+String isValidDouble(String text) {
+  if (text.isEmpty) return 'Favor de llenar el campo';
+  if (double.tryParse(text) == null) return 'Inserta un níumero válido';
+
+  return null;
+}

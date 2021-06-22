@@ -37,7 +37,6 @@ class HomeContent extends StatelessWidget {
             if (state.isLoadingUser || state.user == null) {
               return LoadingContainer();
             }
-
             return Column(
               children: [
                 Text(
@@ -113,15 +112,27 @@ class _HomeOptions extends StatelessWidget {
       ),
     );
 
+    void _validateAnalysis() async {
+      final state = Provider.of<ApplicationState>(context, listen: false);
+
+      await state.fetchAnalysis();
+
+      if (state.currentAnalysis == null) {
+        Navigator.of(context).pushNamed('test');
+      } else {
+        Navigator.of(context).pushNamed('results');
+      }
+    }
+
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           OptionButton(
-            icon: SvgPicture.asset('assets/svg/sample.svg'),
             label: 'Leer análisis',
-            onTap: () => Navigator.of(context).pushNamed('test'),
+            icon: SvgPicture.asset('assets/svg/sample.svg'),
+            onTap: _validateAnalysis,
           ),
           OptionButton(
             label: 'Registra tus medidas',

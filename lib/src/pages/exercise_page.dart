@@ -1,6 +1,7 @@
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class ExercisePage extends StatelessWidget {
   const ExercisePage({Key key}) : super(key: key);
@@ -11,9 +12,19 @@ class ExercisePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle label = TextStyle(
-      color: MyColors.accentColor,
-      fontWeight: FontWeight.bold,
-      fontSize: 16.0
+        color: MyColors.accentColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 16.0);
+
+    Widget videoView = Container(
+      height: 315,
+      child: WebView(
+        initialUrl: Uri.dataFromString(
+                '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/0YRX4pEP6pY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>',
+                mimeType: 'text/html')
+            .toString(),
+        javascriptMode: JavascriptMode.unrestricted,
+      ),
     );
 
     return Scaffold(
@@ -21,19 +32,20 @@ class ExercisePage extends StatelessWidget {
         child: AppBarComponent(),
         preferredSize: const Size(double.infinity, kToolbarHeight),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-            Text('1. Levantarte mas temprano', style: label,),
-            Text('2. Dedica 6 dias de la semana', style: label),
-            Text('3. Elige una actividad', style: label),
-            Text('4. Invierte', style: label),
-            Text('5. Metas a corto plazo', style: label),
-            Text('6. Anota resultados', style: label),
-            Text('7. Desafiante', style: label),
-            Text('8. Dale un significado personal', style: label)
-        ]
-      ),
+      body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          '1. Levantarte mas temprano',
+          style: label,
+        ),
+        Text('2. Dedica 6 dias de la semana', style: label),
+        Text('3. Elige una actividad', style: label),
+        Text('4. Invierte', style: label),
+        Text('5. Metas a corto plazo', style: label),
+        Text('6. Anota resultados', style: label),
+        Text('7. Desafiante', style: label),
+        Text('8. Dale un significado personal', style: label),
+        videoView,
+      ]),
     );
   }
 }

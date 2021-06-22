@@ -1,6 +1,7 @@
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class DietPage extends StatelessWidget {
   const DietPage({Key key}) : super(key: key);
@@ -11,6 +12,17 @@ class DietPage extends StatelessWidget {
         color: MyColors.accentColor,
         fontWeight: FontWeight.bold,
         fontSize: 16.0);
+
+    Widget videoView = Container(
+      height: 315,
+      child: WebView(
+        initialUrl: Uri.dataFromString(
+                '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/2btyqqOjXEM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>',
+                mimeType: 'text/html')
+            .toString(),
+        javascriptMode: JavascriptMode.unrestricted,
+      ),
+    );
 
     return Scaffold(
       appBar: PreferredSize(
@@ -25,7 +37,7 @@ class DietPage extends StatelessWidget {
             style: label,
           ),
           Text(
-            '2 Tomar a diario 8 vasos de agua segura.',
+            '2 Tomar a diario 8 vasos de agua naturalen .',
             style: label,
           ),
           Text(
@@ -60,6 +72,7 @@ class DietPage extends StatelessWidget {
             '10 El consumo de bebidas alcohólicas debe ser responsable.',
             style: label,
           ),
+          videoView,
         ],
       ),
     );
