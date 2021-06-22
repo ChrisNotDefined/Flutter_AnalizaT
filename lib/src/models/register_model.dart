@@ -25,10 +25,10 @@ class RegisterModel {
   // Recibe mapa y regresa nueva intancia por eso factory
   factory RegisterModel.fromJson(Map<String, dynamic> json) => RegisterModel(
         id: json["_id"],
-        peso: json["peso"],
-        estatura: json["estatura"],
-        cintura: json["cintura"],
-        pecho: json["pecho"],
+        peso: json["peso"].toDouble(),
+        estatura: json["estatura"].toDouble(),
+        cintura: json["cintura"].toDouble(),
+        pecho: json["pecho"].toDouble(),
       );
 
   // toma el modelo y lo transforma a json

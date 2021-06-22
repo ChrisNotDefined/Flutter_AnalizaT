@@ -1,30 +1,62 @@
+import 'dart:async';
+
+import 'package:exFinal_analiza_T/src/models/user_model.dart';
+import 'package:exFinal_analiza_T/src/providers/API_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ApplicationState extends ChangeNotifier {
   BuildContext appContext;
 
-  ApplicationState(BuildContext context) {
-    print('init');
-    init(context);
+  ApplicationState() {
+    init();
   }
 
-  User _loggedUser;
+  GlobalKey<NavigatorState> navigationKey;
 
-  bool get isLoggedIn => _loggedUser != null;
+  UserModel _loggedUser;
 
-  User get user => _loggedUser;
+  bool isLoadingUser = false;
 
-  Future<void> init(BuildContext context) async {
-    FirebaseAuth.instance.userChanges().listen((user) {
-      _loggedUser = user;
-      if (user == null)
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil("login", (route) => false);
-      else
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil("test", (route) => false);
+  UserModel get user => _loggedUser;
+
+  StreamController<bool> _loggedInController = StreamController<bool>.broadcast();
+
+  Stream<bool> get loginChanges => _loggedInController.stream;
+
+  Future<void> init() async {
+    // _loggedInController.sink.add(FirebaseAuth.instance.currentUser != null);
+    navigationKey = new GlobalKey<NavigatorState>();
+    print('Initializing provider');
+    FirebaseAuth.instance.userChanges().listen((user) async {
+      print('Verifying');
+      isLoadingUser = true;
       notifyListeners();
+      if (user == null) {
+        _loggedInController.sink.add(false);
+        _loggedUser = null;
+        notifyListeners();
+      } else {
+        await _fetchUser(user);
+        _loggedInController.sink.add(true);
+      }
     });
+  }
+
+  Future<void> _fetchUser(User user) async {
+    print('Updating user info');
+    User firebaseUser = user ?? FirebaseAuth.instance.currentUser;
+    isLoadingUser = true;
+    notifyListeners();
+    _loggedUser = await UserProvider().getUserById(firebaseUser.uid);
+    isLoadingUser = false;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() { 
+    _loggedInController.close();
+    super.dispose();
   }
 }

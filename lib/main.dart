@@ -10,22 +10,36 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(ChangeNotifierProvider(
-    child: MyApp(),
-    create: (context) => ApplicationState(context),
-  ));
+
+  runApp(
+    ChangeNotifierProvider(
+      child: MyApp(),
+      create: (_) => ApplicationState(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final appState = Provider.of<ApplicationState>(context);
+
+    appState.loginChanges.listen((isLoggedIn) {
+      if (!isLoggedIn) {
+        print('Push to login');
+        appState.navigationKey.currentState
+            .pushNamedAndRemoveUntil('login', (route) => false);
+        return;
+      }
+      print('Push to home');
+      appState.navigationKey.currentState
+          .pushNamedAndRemoveUntil('home', (route) => false);
+    });
+
     String _initialRoute = 'login';
 
-    if (FirebaseAuth.instance.currentUser != null) {
-      _initialRoute = 'test';
-    }
-
     return MaterialApp(
+      navigatorKey: appState.navigationKey,
       title: "Analiza-T",
       theme: _appThemeData(),
       debugShowCheckedModeBanner: false,
@@ -41,6 +55,11 @@ class MyApp extends StatelessWidget {
 
   ThemeData _appThemeData() {
     return ThemeData(
+      primaryColor: MyColors.primaryColor,
+      accentColor: MyColors.accentColor,
+      splashColor: MyColors.primaryColor,
+      primarySwatch: Colors.pink,
+      scaffoldBackgroundColor: MyColors.backgroundColor,
       inputDecorationTheme: InputDecorationTheme(
         contentPadding: EdgeInsets.all(10.0),
         border: OutlineInputBorder(),
@@ -58,16 +77,11 @@ class MyApp extends StatelessWidget {
         fillColor: Colors.white,
         filled: true,
       ),
-      primaryColor: MyColors.primaryColor,
-      accentColor: MyColors.accentColor,
-      splashColor: MyColors.primaryColor,
-      primarySwatch: Colors.pink,
       textSelectionTheme: TextSelectionThemeData(
         selectionColor: MyColors.primaryColor,
         cursorColor: MyColors.accentColor,
         selectionHandleColor: MyColors.accentColor,
       ),
-      scaffoldBackgroundColor: MyColors.backgroundColor,
     );
   }
 }

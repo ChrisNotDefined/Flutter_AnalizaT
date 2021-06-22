@@ -26,25 +26,34 @@ class UserProvider {
     return users;
   }
 
-  Future<List<UserModel>> getUserById(String userId) async {
+  Future<UserModel> getUserById(String userId) async {
+    print('Called api');
     final url = Uri.https(
       _url,
       "/users/$userId",
     );
-    final resp = await http.get(url);
 
-    final Map<String, dynamic> decodeData = json.decode(resp.body);
-    final List<UserModel> users = [];
+    try {
+      final resp = await http.get(url);
 
-    if (decodeData == null) return [];
+      if (resp.statusCode != 200) {
+        print('Server respondend ${resp.statusCode}');
+        return null;
+      }
 
-    decodeData.forEach((id, us) {
-      final user = UserModel.fromJson(us);
-      users.add(user);
-    });
+      final Map<String, dynamic> decodeData = json.decode(resp.body);
+      UserModel user;
 
-    print(users);
-    return users;
+      if (decodeData == null) return null;
+
+      user = UserModel.fromJson(decodeData);
+      return user;
+    } catch (e) {
+      print('========ERROR getUserById==========');
+      print(e);
+
+      return null;
+    }
   }
 
   Future<bool> postUser(UserModel user) async {
@@ -127,7 +136,7 @@ class ResultProvider {
     return results;
   }
 
-  Future<List<ResultModel>> getResultByUserId(String userId) async {
+  Future<ResultModel> getResultByUserId(String userId) async {
     final url = Uri.https(
       _url,
       "/results/$userId",
@@ -135,17 +144,14 @@ class ResultProvider {
     final resp = await http.get(url);
 
     final Map<String, dynamic> decodeData = json.decode(resp.body);
-    final List<ResultModel> results = [];
+    ResultModel result;
 
-    if (decodeData == null) return [];
+    if (decodeData == null) return null;
 
-    decodeData.forEach((id, res) {
-      final result = ResultModel.fromJson(res);
-      results.add(result);
-    });
+    result = ResultModel.fromJson(decodeData);
 
-    print(results);
-    return results;
+    print(result);
+    return result;
   }
 
   Future<bool> postResult(ResultModel result) async {
@@ -209,17 +215,16 @@ class RegisterProvider {
     final url = Uri.https(_url, '/registers/$userId');
     final resp = await http.get(url);
 
-    final Map<String, dynamic> decodeData = json.decode(resp.body);
-    final List<RegisterModel> registers = [];
+    final List<dynamic> decodeData = json.decode(resp.body);
 
+    final List<RegisterModel> registers = [];
     if (decodeData == null) return [];
 
-    decodeData.forEach((id, reg) {
+    decodeData.forEach((reg) {
       final register = RegisterModel.fromJson(reg);
       registers.add(register);
     });
 
-    print(registers);
     return registers;
   }
 

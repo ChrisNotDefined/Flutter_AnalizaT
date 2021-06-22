@@ -144,7 +144,7 @@ class __RegisterFormState extends State<_RegisterForm> {
 
         if (!result) return;
 
-        Navigator.pushNamed(context, 'test');
+        Navigator.pushReplacementNamed(context, 'home');
       } catch (e) {
         print(e);
       }

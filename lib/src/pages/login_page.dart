@@ -46,7 +46,7 @@ class _LoginFormState extends State<_LoginForm> {
         final creadentials = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
         if (creadentials != null) {
-          Navigator.of(context).pushReplacementNamed('test');
+          Navigator.of(context).pushReplacementNamed('home');
         }
         print('logged in');
       } catch (e) {
