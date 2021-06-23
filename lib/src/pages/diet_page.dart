@@ -1,4 +1,5 @@
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
+import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -8,29 +9,53 @@ class DietPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle label = TextStyle(
-        color: MyColors.accentColor,
-        fontWeight: FontWeight.bold,
-        fontSize: 16.0);
-
-    Widget videoView = Container(
-      height: 315,
-      child: WebView(
-        initialUrl: Uri.dataFromString(
-                '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/2btyqqOjXEM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>',
-                mimeType: 'text/html')
-            .toString(),
-        javascriptMode: JavascriptMode.unrestricted,
-      ),
-    );
-
     return Scaffold(
-      appBar: PreferredSize(
-        child: AppBarComponent(),
-        preferredSize: const Size(double.infinity, kToolbarHeight),
+        appBar: PreferredSize(
+          child: AppBarComponent(),
+          preferredSize: const Size(double.infinity, kToolbarHeight),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _TipsDiet(),
+              _BotonDiet(),
+            ],
+          ),
+        ));
+  }
+}
+
+class _TipsDiet extends StatelessWidget {
+  _TipsDiet({Key key}) : super(key: key);
+
+  final TextStyle label = TextStyle(
+      color: MyColors.accentColor, fontWeight: FontWeight.bold, fontSize: 16.0);
+
+  final Widget videoView = Container(
+    height: 315,
+    child: WebView(
+      initialUrl: Uri.dataFromString(
+              '<iframe width="100%" height="290" src="https://www.youtube.com/embed/2btyqqOjXEM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>',
+              mimeType: 'text/html')
+          .toString(),
+      javascriptMode: JavascriptMode.unrestricted,
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: MyColors.accentColor),
+        borderRadius: BorderRadius.circular(10.0),
+        color: Color(0xFFFFFFFF),
       ),
-      body: Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             "1 Incorporar a diario alimentos de todos los grupos.",
@@ -74,6 +99,27 @@ class DietPage extends StatelessWidget {
           ),
           videoView,
         ],
+      ),
+    );
+  }
+}
+
+class _BotonDiet extends StatelessWidget {
+  const _BotonDiet({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50.0,
+      alignment: Alignment.center,
+      width: double.infinity,
+      child: ButtonComponent(
+        child: Text('Regresar', style: TextStyle(fontSize: 25.0)),
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
     );
   }

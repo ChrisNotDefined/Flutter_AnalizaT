@@ -41,6 +41,8 @@ class UserProvider {
         return null;
       }
 
+      print(resp.body);
+
       final Map<String, dynamic> decodeData = json.decode(resp.body);
       UserModel user;
 
@@ -284,12 +286,30 @@ class RegisterProvider {
     }
   }
 
-  Future<int> deleteRegister(String userId) async {
-    final url = Uri.https(_url, '/registers/$userId');
-    final resp = await http.delete(url);
+  Future<bool> deleteRegisters(String userId) async {
+    try {
+      final url = Uri.https(_url, '/registers/$userId');
+      final resp = await http.delete(url);
+      if (resp.statusCode != 200) {
+        if (resp.statusCode == 500) {
+          print("Server failed, responded: ");
+          print(resp.body);
+          return false;
+        }
 
-    print(json.decode(resp.body));
+        print("Server respondend ${resp.statusCode}");
+        return false;
+      }
 
-    return 1;
+      if (resp.body.isNotEmpty) {
+        print(json.decode(resp.body));
+      }
+      
+      return true;
+    } catch (e) {
+      print("========FAILED DELETE REGISTERS=========");
+      print(e);
+      return false;
+    }
   }
 }

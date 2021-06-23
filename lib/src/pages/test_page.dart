@@ -50,12 +50,8 @@ class _TestState extends State<_TestForm> {
   double _globulosBlancos = 0.0;
   double _plaquetas = 0.0;
 
-  UserModel user;
-
   @override
   Widget build(BuildContext context) {
-    user = Provider.of<ApplicationState>(context).user;
-
     return Container(
       padding: EdgeInsets.all(10.0),
       child: Form(
@@ -71,6 +67,7 @@ class _TestState extends State<_TestForm> {
                 _trigliceridos = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             FormRow(
               label: 'Ácido Úrico:',
@@ -79,6 +76,7 @@ class _TestState extends State<_TestForm> {
                 _acidoUrico = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             FormRow(
               label: 'Glucosa:',
@@ -87,6 +85,7 @@ class _TestState extends State<_TestForm> {
                 _glucosa = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             FormRow(
               label: 'Glóbulos Rojos:',
@@ -95,6 +94,7 @@ class _TestState extends State<_TestForm> {
                 _globulosRojos = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             FormRow(
               label: 'Glóbulos Blancos:',
@@ -103,6 +103,7 @@ class _TestState extends State<_TestForm> {
                 _globulosBlancos = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             FormRow(
               label: 'Plaquetas:',
@@ -111,6 +112,7 @@ class _TestState extends State<_TestForm> {
                 _plaquetas = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             FormRow(
               label: 'Hemoglobina:',
@@ -119,6 +121,7 @@ class _TestState extends State<_TestForm> {
                 _hemoglobina = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             SizedBox(height: 50),
             _CalcButton(
@@ -137,7 +140,8 @@ class _TestState extends State<_TestForm> {
   Future<void> uploadTest() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-
+      UserModel user =
+          Provider.of<ApplicationState>(context, listen: false).user;
       try {
         ResultModel result = await ResultProvider().getResultByUserId(user.id);
         if (result == null) {
@@ -174,7 +178,7 @@ class _TestState extends State<_TestForm> {
           bool response = await ResultProvider().putResult(putResult);
           if (!response) return;
         }
-        Navigator.of(context).pushNamed('results');
+        Navigator.of(context).pushReplacementNamed('results');
       } catch (error) {
         print('FAILDED UPLOAD');
         print(error);
@@ -207,6 +211,7 @@ class _TestState extends State<_TestForm> {
                   _hdl = double.tryParse(value);
                 }),
                 validator: isValidDouble,
+                keyBoardType: TextInputType.number,
               )),
               SizedBox(width: 20.0),
               Expanded(
@@ -216,6 +221,7 @@ class _TestState extends State<_TestForm> {
                   _ldl = double.tryParse(value);
                 }),
                 validator: isValidDouble,
+                keyBoardType: TextInputType.number,
               )),
             ],
           ),

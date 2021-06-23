@@ -1,5 +1,6 @@
 import 'package:exFinal_analiza_T/src/components/AdviceComponent.dart';
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
+import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +12,10 @@ class RecommendationsPage extends StatelessWidget {
 
   final _sleepUrl =
       'https://images.unsplash.com/photo-1531353826977-0941b4779a1c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80';
+
   final _dietUrl =
       'https://images.unsplash.com/photo-1565895405138-6c3a1555da6a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +55,8 @@ class RecommendationsPage extends StatelessWidget {
                   Navigator.pushNamed(context, 'diet');
                 },
               ),
+              SizedBox(height: 10),
+              _BackButton(),
             ],
           ),
         ),
@@ -79,4 +84,25 @@ class TipsList extends StatelessWidget {
 TextStyle _subTitle() {
   return TextStyle(
       fontSize: 30, color: MyColors.accentColor, fontWeight: FontWeight.bold);
+}
+
+class _BackButton extends StatelessWidget {
+  const _BackButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      height: 50.0,
+      width: double.infinity,
+      child: ButtonComponent(
+        child: Text('Volver', style: TextStyle(fontSize: 25.0)),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
 }

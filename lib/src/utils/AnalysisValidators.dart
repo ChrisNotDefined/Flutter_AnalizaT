@@ -1,7 +1,8 @@
 String isCalcGlobulosRojos(double globulosRojos) {
   if (globulosRojos >= 4) {
     if (globulosRojos <= 6) {
-      return 'Tu nivel de Globulos Rojos es adecuado';
+      return null;
+      // return 'Tu nivel de Globulos Rojos es adecuado';
     } else {
       return 'Tu nivel de Globulos Rojos es alto';
     }
@@ -11,9 +12,10 @@ String isCalcGlobulosRojos(double globulosRojos) {
 }
 
 String isCalcGlobulosBlancos(double globulosBlancos) {
-  if (globulosBlancos >= 45000) {
-    if (globulosBlancos <= 11000) {
-      return 'Tu nivel de Globulos Blancos es adecuado';
+  if (globulosBlancos >= 45) {
+    if (globulosBlancos <= 110) {
+      // return 'Tu nivel de Globulos Blancos es adecuado';
+      return null;
     } else {
       return 'Tu nivel de Globulos Blancos es alto';
     }
@@ -25,7 +27,8 @@ String isCalcGlobulosBlancos(double globulosBlancos) {
 String isCalcTrigliceridos(double trigliceridos) {
   if (trigliceridos >= 30) {
     if (trigliceridos <= 200) {
-      return 'Tu nivel de Trigliceridos es adecuado';
+      // return 'Tu nivel de Trigliceridos es adecuado';
+      return null;
     } else {
       return 'Tu nivel de Trigliceridos es alto';
     }
@@ -37,7 +40,8 @@ String isCalcTrigliceridos(double trigliceridos) {
 String isCalcHemoglobina(double hemoglobina) {
   if (hemoglobina >= 12) {
     if (hemoglobina <= 16) {
-      return 'Tu nivel de Hemoglobina es adecuado';
+      // return 'Tu nivel de Hemoglobina es adecuado';
+      return null;
     } else {
       return 'Tu nivel de Hemoglobina es alto';
     }
@@ -47,9 +51,10 @@ String isCalcHemoglobina(double hemoglobina) {
 }
 
 String isCalcPlaquetas(double plaquetas) {
-  if (plaquetas >= 150000) {
-    if (plaquetas <= 400000) {
-      return 'Tu nivel de Plaquetas es adecuado';
+  if (plaquetas >= 1500) {
+    if (plaquetas <= 4000) {
+      // return 'Tu nivel de Plaquetas es adecuado';
+      return null;
     } else {
       return 'Tu nivel de Plaquetas es alto';
     }
@@ -61,7 +66,8 @@ String isCalcPlaquetas(double plaquetas) {
 String isCalcGlucosa(double glucosa) {
   if (glucosa >= 70) {
     if (glucosa <= 110) {
-      return 'Tu nivel de Glucosa es adecuado';
+      // return 'Tu nivel de Glucosa es adecuado';
+      return null;
     } else {
       return 'Tu nivel de Glucosa es alto';
     }
@@ -73,7 +79,8 @@ String isCalcGlucosa(double glucosa) {
 String isCalcAcidoUrico(double acidoUrico) {
   if (acidoUrico >= 2) {
     if (acidoUrico <= 7) {
-      return 'Tu nivel de Acido Urico es adecuado';
+      // return 'Tu nivel de Acido Urico es adecuado';
+      return null;
     } else {
       return 'Tu nivel de Acido Urico es alto';
     }
@@ -85,7 +92,8 @@ String isCalcAcidoUrico(double acidoUrico) {
 String isCalcColesterolHDL(double hdl) {
   if (hdl >= 40) {
     if (hdl <= 60) {
-      return 'Tu nivel de HDL es adecuado';
+      // return 'Tu nivel de HDL es adecuado';
+      return null;
     } else {
       return 'Tu nivel de HDL es alto';
     }
@@ -97,7 +105,8 @@ String isCalcColesterolHDL(double hdl) {
 String isCalcColesterolLDL(double ldl) {
   if (ldl >= 70) {
     if (ldl <= 130) {
-      return 'Tu nivel de LDL es adecuado';
+      // return 'Tu nivel de LDL es adecuado';
+      return null;
     } else {
       return 'Tu nivel de LDL es alto';
     }

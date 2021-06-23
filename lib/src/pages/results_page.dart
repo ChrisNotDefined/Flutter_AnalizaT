@@ -1,6 +1,8 @@
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
+import 'package:exFinal_analiza_T/src/models/result_model.dart';
 import 'package:exFinal_analiza_T/src/providers/ApplicationState.dart';
+import 'package:exFinal_analiza_T/src/utils/AnalysisValidators.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,7 @@ class ResultsPage extends StatelessWidget {
           child: Column(
             children: [
               _Results(),
+              _Observations(),
               _Options(),
             ],
           ),
@@ -28,6 +31,120 @@ class ResultsPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class _Observations extends StatelessWidget {
+  const _Observations({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final ResultModel results =
+        Provider.of<ApplicationState>(context).currentAnalysis;
+
+    final warningDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(20.0),
+      color: Colors.yellow[200],
+      border: Border.all(
+        color: Colors.amber,
+        width: 4.0,
+      ),
+    );
+
+    final okDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(20.0),
+      color: Colors.green[200],
+      border: Border.all(
+        color: Colors.green,
+        width: 1.0,
+      ),
+    );
+
+    List<String> _lookObservations() {
+      List<String> observations = [];
+
+      String resp = isCalcGlobulosRojos(results.globulosRojos);
+      if (resp != null) observations.add(resp);
+
+      resp = isCalcGlucosa(results.glucosa);
+      if (resp != null) observations.add(resp);
+
+      resp = isCalcGlobulosBlancos(results.globulosBlancos);
+      if (resp != null) observations.add(resp);
+
+      resp = isCalcTrigliceridos(results.trigliceridos);
+      if (resp != null) observations.add(resp);
+
+      resp = isCalcHemoglobina(results.hemoglobina);
+      if (resp != null) observations.add(resp);
+
+      resp = isCalcPlaquetas(results.plaquetas);
+      if (resp != null) observations.add(resp);
+
+      resp = isCalcAcidoUrico(results.acidoUrico);
+      if (resp != null) observations.add(resp);
+
+      resp = isCalcColesterolLDL(results.colesterol.ldl);
+      if (resp != null) observations.add(resp);
+
+      resp = isCalcColesterolHDL(results.colesterol.hdl);
+      if (resp != null) observations.add(resp);
+
+      return observations;
+    }
+
+    if (_lookObservations().isEmpty) {
+      return Container(
+        margin: EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        decoration: okDecoration,
+        child: Text(
+          'Todas tus mediciones están saludables. \n\n ¡Sigue cuidándote!',
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.green[700],
+          ),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
+    final warnTitleStyle = TextStyle(
+      fontSize: 23.0,
+      fontWeight: FontWeight.bold,
+      color: Colors.amber[700],
+    );
+
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      decoration: warningDecoration,
+      child: Column(
+        children: [
+          Container(
+            child: Text('Observaciones', style: warnTitleStyle),
+          )
+        ]..addAll(_obsList(_lookObservations).map((obs) {
+            final obsStyle = TextStyle(
+              color: Colors.amber,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            );
+
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 5.0),
+              child: Text(obs, style: obsStyle),
+            );
+          })),
+      ),
+    );
+  }
+
+  List<String> _obsList(List<String> _lookObservations()) =>
+      _lookObservations();
 }
 
 class _Results extends StatelessWidget {
@@ -50,6 +167,19 @@ class _Results extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          Container(
+            padding: EdgeInsets.only(bottom: 20.0),
+            width: double.infinity,
+            child: Text(
+              'Tu análisis',
+              style: TextStyle(
+                color: MyColors.accentColor,
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
           _ResField(
               text: 'Colesterol (HDL):',
               unit: '(mg / dl)',

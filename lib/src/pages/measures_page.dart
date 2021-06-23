@@ -1,4 +1,5 @@
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:exFinal_analiza_T/src/components/AlertComponent.dart';
 import 'package:exFinal_analiza_T/src/models/register_model.dart';
 import 'package:exFinal_analiza_T/src/providers/ApplicationState.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
@@ -30,6 +31,8 @@ class _MeasuresPageState extends State<MeasuresPage> {
   }
 
   Widget build(BuildContext context) {
+    final state = Provider.of<ApplicationState>(context);
+
     final registerForm = Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Form(
@@ -43,6 +46,7 @@ class _MeasuresPageState extends State<MeasuresPage> {
                 register.peso = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             FormRow(
               label: 'Estatura:',
@@ -51,6 +55,7 @@ class _MeasuresPageState extends State<MeasuresPage> {
                 register.estatura = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             FormRow(
               label: 'Cintura:',
@@ -59,6 +64,7 @@ class _MeasuresPageState extends State<MeasuresPage> {
                 register.cintura = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             FormRow(
               label: 'Pecho:',
@@ -67,6 +73,7 @@ class _MeasuresPageState extends State<MeasuresPage> {
                 register.pecho = double.tryParse(value);
               }),
               validator: isValidDouble,
+              keyBoardType: TextInputType.number,
             ),
             SizedBox(height: 10),
             _CalcMeasuresButton(register: register, formKey: formKey),
@@ -81,22 +88,87 @@ class _MeasuresPageState extends State<MeasuresPage> {
         child: AppBarComponent(),
         preferredSize: const Size(double.infinity, kToolbarHeight),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          constraints: BoxConstraints(
-              minHeight:
-                  MediaQuery.of(context).size.height - kToolbarHeight - 30),
-          padding: EdgeInsets.symmetric(vertical: 20.0),
-          child: Center(
-            child: Column(
-              children: [
-                registerForm,
-                SizedBox(height: 10),
-                ChartsSection(),
-              ],
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              constraints: BoxConstraints(
+                  minHeight:
+                      MediaQuery.of(context).size.height - kToolbarHeight - 30),
+              padding: EdgeInsets.symmetric(vertical: 20.0),
+              child: Center(
+                child: Column(
+                  children: [
+                    registerForm,
+                    SizedBox(height: 10),
+                    ChartsSection(),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
+          state.isLoadingRegister ? _LoadingIndicator() : Container(),
+        ],
+      ),
+    );
+  }
+}
+
+class _Deletebutton extends StatelessWidget {
+  const _Deletebutton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      onPressed: () {
+        AlertComponent(
+          title: '¿Borrar Registros?',
+          message:
+              'Se borrrarán todos los registros, esta acción no se puede deshacer.',
+          actions: {
+            'Aceptar': () {
+              Provider.of<ApplicationState>(context, listen: false)
+                  .cleanRegisters();
+              Navigator.of(context).pop();
+            },
+            'Cancelar': () => Navigator.of(context).pop()
+          },
+        ).show(context);
+      },
+      icon: Icon(Icons.delete_forever),
+      label: Text('Borrar registros'),
+    );
+  }
+}
+
+class _LoadingIndicator extends StatelessWidget {
+  const _LoadingIndicator({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: MyColors.backgroundColor.withAlpha(150),
+      height: double.infinity,
+      width: double.infinity,
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Cargando',
+            style: TextStyle(
+              color: MyColors.accentColor,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 10.0),
+          CircularProgressIndicator(),
+        ],
       ),
     );
   }
@@ -129,6 +201,8 @@ Column _loadCharts(List<RegisterModel> registers, BuildContext context) {
       _chartContainer(MeasuresChart(series1)),
       SizedBox(height: 20.0),
       _chartContainer(MeasuresChart(series2)),
+      SizedBox(height: 10),
+      _Deletebutton(),
     ],
   );
 }
@@ -142,9 +216,36 @@ class ChartsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final registers = Provider.of<ApplicationState>(context).registers;
 
-    if (registers != null) {
+    if (registers.isEmpty) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        alignment: Alignment.center,
+        height: MediaQuery.of(context).size.height / 2.8,
+        child: Container(
+          padding: EdgeInsets.all(30.0),
+          decoration: BoxDecoration(
+            color: MyColors.primaryColor,
+            borderRadius: BorderRadius.circular(20.0),
+            border: Border.all(
+                color: MyColors.accentColor, style: BorderStyle.solid),
+          ),
+          child: Text(
+            'Comienza a añadir medidas para visualizar tu progreso.',
+            style: TextStyle(
+              color: MyColors.accentColor,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
+    if (registers != null && registers.isNotEmpty) {
       return _loadCharts(registers, context);
     }
+
     return Container(
       height: MediaQuery.of(context).size.height / 2.5,
       child: Center(child: CircularProgressIndicator()),

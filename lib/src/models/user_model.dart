@@ -30,7 +30,7 @@ class UserModel {
         correo: json["correo"],
         sexo: json["sexo"],
         fechaNacimiento: json["fecha_nacimiento"],
-        registros: List<String>.from(json["registros"]),
+        registros: List<String>.from(json["registros"] ?? []),
       );
 
   // toma el modelo y lo transforma a json

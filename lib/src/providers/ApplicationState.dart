@@ -8,24 +8,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ApplicationState extends ChangeNotifier {
-  BuildContext appContext;
+  GlobalKey<NavigatorState> navigationKey;
 
   ApplicationState() {
     init();
   }
-  GlobalKey<NavigatorState> navigationKey;
 
-  
-  
+  // Analysis ==========================
+
+  bool isLoadingAnalysis = false;
+
   ResultModel currentAnalysis;
-  
+
+  // Registers ==============================
+
+  bool isLoadingRegister = false;
+
   List<RegisterModel> registers;
 
-  
-  
-  
+  // User ===============================
+
   UserModel _loggedUser;
-  
+
   bool isLoadingUser = false;
 
   UserModel get user => _loggedUser;
@@ -35,7 +39,7 @@ class ApplicationState extends ChangeNotifier {
 
   Stream<bool> get loginChanges => _loggedInController.stream;
 
-
+  // ==========================================
 
   Future<void> init() async {
     navigationKey = new GlobalKey<NavigatorState>();
@@ -56,8 +60,7 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-
-
+  // USER ===============================
 
   Future<void> _fetchUser(User user) async {
     print('Updating user info');
@@ -69,36 +72,48 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
+  // REGISTERS =============================
 
   void uploadRegister(RegisterModel register) async {
-    print('Prov reg:  $register');
-
+    isLoadingRegister = true;
+    notifyListeners();
     final success =
         await RegisterProvider().postRegister(register, _loggedUser.id);
     if (success) {
       fetchRegisters();
     }
+    isLoadingRegister = false;
+    notifyListeners();
   }
 
   void fetchRegisters() async {
+    isLoadingRegister = true;
+    notifyListeners();
     registers = await RegisterProvider().getRegistersByUserId(_loggedUser.id);
+    isLoadingRegister = false;
     notifyListeners();
   }
 
+  void cleanRegisters() async {
+    isLoadingRegister = true;
+    notifyListeners();
+    final success = await RegisterProvider().deleteRegisters(_loggedUser.id);
+    if (success) {
+      fetchRegisters();
+    }
+  }
 
-
-
+  // ANALYSIS ==================================
 
   Future<void> fetchAnalysis() async {
+    isLoadingAnalysis = true;
+    notifyListeners();
     currentAnalysis = await ResultProvider().getResultByUserId(_loggedUser.id);
+    isLoadingAnalysis = false;
     notifyListeners();
   }
 
-
-
-
+  // ===================================
 
   @override
   void dispose() {
