@@ -1,5 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:exFinal_analiza_T/src/components/AlertComponent.dart';
+import 'package:exFinal_analiza_T/src/components/LoadingIndicatorComponent.dart';
 import 'package:exFinal_analiza_T/src/models/register_model.dart';
 import 'package:exFinal_analiza_T/src/providers/ApplicationState.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
@@ -107,7 +108,7 @@ class _MeasuresPageState extends State<MeasuresPage> {
               ),
             ),
           ),
-          state.isLoadingRegister ? _LoadingIndicator() : Container(),
+          state.isLoadingRegister ? LoadingIndicator() : Container(),
         ],
       ),
     );
@@ -139,37 +140,6 @@ class _Deletebutton extends StatelessWidget {
       },
       icon: Icon(Icons.delete_forever),
       label: Text('Borrar registros'),
-    );
-  }
-}
-
-class _LoadingIndicator extends StatelessWidget {
-  const _LoadingIndicator({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: MyColors.backgroundColor.withAlpha(150),
-      height: double.infinity,
-      width: double.infinity,
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Cargando',
-            style: TextStyle(
-              color: MyColors.accentColor,
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10.0),
-          CircularProgressIndicator(),
-        ],
-      ),
     );
   }
 }
@@ -214,9 +184,19 @@ class ChartsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final registers = Provider.of<ApplicationState>(context).registers;
+    final state = Provider.of<ApplicationState>(context);
 
-    if (registers.isEmpty) {
+    final registers = state.registers;
+    final isLoading = state.isLoadingRegister;
+
+    if (isLoading) {
+      return Container(
+        height: MediaQuery.of(context).size.height / 2.5,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (registers == null || registers.isEmpty) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         alignment: Alignment.center,
@@ -242,14 +222,7 @@ class ChartsSection extends StatelessWidget {
       );
     }
 
-    if (registers != null && registers.isNotEmpty) {
-      return _loadCharts(registers, context);
-    }
-
-    return Container(
-      height: MediaQuery.of(context).size.height / 2.5,
-      child: Center(child: CircularProgressIndicator()),
-    );
+    return _loadCharts(registers, context);
   }
 }
 
@@ -266,6 +239,12 @@ class _GoBackButton extends StatelessWidget {
       child: ButtonComponent(
         child: Text('Volver', style: TextStyle(fontSize: 25.0)),
         onPressed: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+          
           Navigator.pop(context);
         },
       ),

@@ -1,5 +1,6 @@
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
+import 'package:exFinal_analiza_T/src/components/LoadingIndicatorComponent.dart';
 import 'package:exFinal_analiza_T/src/models/result_model.dart';
 import 'package:exFinal_analiza_T/src/providers/ApplicationState.dart';
 import 'package:exFinal_analiza_T/src/utils/AnalysisValidators.dart';
@@ -12,22 +13,29 @@ class ResultsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = Provider.of<ApplicationState>(context).isLoadingAnalysis;
+
     return Scaffold(
       appBar: PreferredSize(
         child: AppBarComponent(),
         preferredSize: const Size(double.infinity, kToolbarHeight),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0),
-          child: Column(
-            children: [
-              _Results(),
-              _Observations(),
-              _Options(),
-            ],
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 20.0),
+              child: Column(
+                children: [
+                  _Results(),
+                  _Observations(),
+                  _Options(),
+                ],
+              ),
+            ),
           ),
-        ),
+          isLoading ? LoadingIndicator() : Container()
+        ],
       ),
     );
   }
@@ -136,7 +144,13 @@ class _Observations extends StatelessWidget {
 
             return Container(
               padding: EdgeInsets.symmetric(vertical: 5.0),
-              child: Text(obs, style: obsStyle),
+              child: Row(
+                children: [
+                  Icon(Icons.info, color: Colors.amber),
+                  SizedBox(width: 10.0),
+                  Expanded(child: Text(obs, style: obsStyle)),
+                ],
+              ),
             );
           })),
       ),
@@ -286,41 +300,44 @@ class _Options extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 50.0,
-          width: 250.0,
-          child: ButtonComponent(
-            child: Text('Nuevos Análisis', style: TextStyle(fontSize: 25.0)),
-            onPressed: () {
-              Navigator.pushNamed(context, 'test');
-            },
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        children: [
+          Container(
+            height: 50.0,
+            width: double.infinity,
+            child: ButtonComponent(
+              child: Text('Nuevos Análisis', style: TextStyle(fontSize: 25.0)),
+              onPressed: () {
+                Navigator.pushNamed(context, 'test');
+              },
+            ),
           ),
-        ),
-        SizedBox(height: 20),
-        Container(
-          height: 50.0,
-          width: 250.0,
-          child: ButtonComponent(
-            child: Text('Recomendaciones', style: TextStyle(fontSize: 25.0)),
-            onPressed: () {
-              Navigator.pushNamed(context, 'recomendations');
-            },
+          SizedBox(height: 20),
+          Container(
+            height: 50.0,
+            width: double.infinity,
+            child: ButtonComponent(
+              child: Text('Recomendaciones', style: TextStyle(fontSize: 25.0)),
+              onPressed: () {
+                Navigator.pushNamed(context, 'recomendations');
+              },
+            ),
           ),
-        ),
-        SizedBox(height: 20),
-        Container(
-          height: 50.0,
-          width: 250.0,
-          child: ButtonComponent(
-            child: Text('Regresar', style: TextStyle(fontSize: 25.0)),
-            onPressed: () {
-              Navigator.popUntil(context, ModalRoute.withName('home'));
-            },
+          SizedBox(height: 20),
+          Container(
+            height: 50.0,
+            width: double.infinity,
+            child: ButtonComponent(
+              child: Text('Regresar', style: TextStyle(fontSize: 25.0)),
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName('home'));
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -44,6 +45,7 @@ class AdviceComponent extends StatelessWidget {
 
   BoxDecoration _imageBackground() {
     return BoxDecoration(
+      color: MyColors.accentColor,
       image: DecorationImage(
         image: this.image,
         fit: BoxFit.cover,

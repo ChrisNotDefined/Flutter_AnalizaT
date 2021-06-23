@@ -59,6 +59,12 @@ class _TestState extends State<_TestForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Text(
+              'Llene los campos y verifique que sean las mismas unidades.',
+              style: TextStyle(color: MyColors.accentColor, fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 10.0),
             _cholesterolField(),
             FormRow(
               label: 'Triglicéridos:',
@@ -178,6 +184,8 @@ class _TestState extends State<_TestForm> {
           bool response = await ResultProvider().putResult(putResult);
           if (!response) return;
         }
+
+        Provider.of<ApplicationState>(context, listen: false).fetchAnalysis();
         Navigator.of(context).pushReplacementNamed('results');
       } catch (error) {
         print('FAILDED UPLOAD');
@@ -206,7 +214,7 @@ class _TestState extends State<_TestForm> {
             children: [
               Expanded(
                   child: InputComponent(
-                label: 'HDL',
+                label: 'HDL (mg / dl)',
                 onChange: (value) => setState(() {
                   _hdl = double.tryParse(value);
                 }),
@@ -216,7 +224,7 @@ class _TestState extends State<_TestForm> {
               SizedBox(width: 20.0),
               Expanded(
                   child: InputComponent(
-                label: 'LDL',
+                label: 'LDL (mg / dl)',
                 onChange: (value) => setState(() {
                   _ldl = double.tryParse(value);
                 }),

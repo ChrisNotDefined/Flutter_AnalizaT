@@ -34,42 +34,90 @@ class ApplicationState extends ChangeNotifier {
 
   UserModel get user => _loggedUser;
 
-  StreamController<bool> _loggedInController =
-      StreamController<bool>.broadcast();
-
-  Stream<bool> get loginChanges => _loggedInController.stream;
-
   // ==========================================
 
   Future<void> init() async {
     navigationKey = new GlobalKey<NavigatorState>();
     print('Initializing provider');
     FirebaseAuth.instance.userChanges().listen((User user) async {
-      print('Verifying');
+      print('User changed');
       isLoadingUser = true;
       notifyListeners();
       if (user == null) {
-        _loggedInController.sink.add(false);
+        print('No user');
+        navigationKey.currentState
+            ?.pushNamedAndRemoveUntil('login', (route) => false);
         _loggedUser = null;
         isLoadingUser = false;
         notifyListeners();
       } else {
-        await _fetchUser(user);
-        _loggedInController.sink.add(true);
+        print('Has User');
+        await _fetchUser(user.uid);
+        navigationKey.currentState
+            ?.pushNamedAndRemoveUntil('home', (route) => false);
       }
     });
   }
 
   // USER ===============================
 
-  Future<void> _fetchUser(User user) async {
+  Future<void> _fetchUser(String uid) async {
     print('Updating user info');
-    User firebaseUser = user;
     isLoadingUser = true;
     notifyListeners();
-    _loggedUser = await UserProvider().getUserById(firebaseUser.uid);
+    _loggedUser = await UserProvider().getUserById(uid);
     isLoadingUser = false;
     notifyListeners();
+  }
+
+  Future<void> login({String email, String password}) async {
+    isLoadingUser = true;
+    notifyListeners();
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      print('logged in');
+    } on FirebaseAuthException catch (authEx) {
+      print('FIREBASE ERROR: ${authEx.code}');
+      throw authEx;
+    } catch (e) {
+      print('[ERROR] ${e.message}');
+      throw e;
+    } finally {
+      isLoadingUser = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> registerUser(UserModel user, String pass) async {
+    isLoadingUser = true;
+    notifyListeners();
+    try {
+      UserCredential cred = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: user.correo, password: pass);
+
+      user.id = cred.user.uid;
+
+      bool success = await UserProvider().postUser(user);
+
+      if (success) {
+        _fetchUser(cred.user.uid);
+      }
+
+      print('Something went wrong');
+      isLoadingUser = false;
+      notifyListeners();
+    } on FirebaseAuthException catch (authEx) {
+      print('Firebase error: ${authEx.code}');
+      isLoadingUser = false;
+      notifyListeners();
+      throw authEx;
+    } catch (e) {
+      print(e);
+      isLoadingUser = false;
+      notifyListeners();
+      throw e;
+    }
   }
 
   // REGISTERS =============================
@@ -87,8 +135,8 @@ class ApplicationState extends ChangeNotifier {
   }
 
   void fetchRegisters() async {
-    isLoadingRegister = true;
-    notifyListeners();
+    // isLoadingRegister = true;
+    // notifyListeners();
     registers = await RegisterProvider().getRegistersByUserId(_loggedUser.id);
     isLoadingRegister = false;
     notifyListeners();
@@ -117,7 +165,6 @@ class ApplicationState extends ChangeNotifier {
 
   @override
   void dispose() {
-    _loggedInController.close();
     super.dispose();
   }
 }

@@ -36,12 +36,12 @@ class AlertComponent extends StatelessWidget {
           ),
         ],
       ),
-      actions: this.actions.keys.map((e) {
+      actions: this.actions != null ? this.actions.keys.map((e) {
         return TextButton(
           onPressed: this.actions[e],
           child: Text(e),
         );
-      }).toList(),
+      }).toList() : [],
     );
   }
 

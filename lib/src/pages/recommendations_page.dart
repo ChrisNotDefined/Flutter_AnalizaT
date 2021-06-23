@@ -94,8 +94,7 @@ class _BackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
-      height: 50.0,
+      height: 70.0,
       width: double.infinity,
       child: ButtonComponent(
         child: Text('Volver', style: TextStyle(fontSize: 25.0)),

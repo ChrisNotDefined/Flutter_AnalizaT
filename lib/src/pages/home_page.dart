@@ -1,5 +1,6 @@
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
+import 'package:exFinal_analiza_T/src/components/LoadingIndicatorComponent.dart';
 import 'package:exFinal_analiza_T/src/providers/ApplicationState.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,63 +30,43 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(5.0),
-      child: Center(
-        child: Consumer<ApplicationState>(
-          builder: (context, state, widget) {
-            if (state.isLoadingUser || state.user == null) {
-              return LoadingContainer();
-            }
-            return Column(
-              children: [
-                Text(
-                  'Bienvenido',
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: MyColors.accentColor,
-                  ),
-                ),
-                Text(
-                  state.user.nombre,
-                  style: TextStyle(
-                    color: MyColors.accentColor,
-                    fontSize: 20.0,
-                  ),
-                ),
-                _HomeOptions(),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
+    final state = Provider.of<ApplicationState>(context);
 
-class LoadingContainer extends StatelessWidget {
-  const LoadingContainer({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-              child: Text(
-            'Cargando...',
-            style: TextStyle(
-              color: MyColors.accentColor,
-              fontSize: 20.0,
+    return Stack(
+      children: [
+        Container(
+          child: SingleChildScrollView(
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(5.0),
+              height: MediaQuery.of(context).size.height - kToolbarHeight - 25,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Bienvenido',
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: MyColors.accentColor,
+                    ),
+                  ),
+                  Text(
+                    state.user?.nombre ?? '',
+                    style: TextStyle(
+                      color: MyColors.accentColor,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  _HomeOptions(),
+                ],
+              ),
             ),
-          )),
-          SizedBox(height: 10.0),
-          CircularProgressIndicator(),
-        ],
-      ),
+          ),
+        ),
+        state.isLoadingUser || state.user == null || state.isLoadingAnalysis
+            ? LoadingIndicator()
+            : Container(),
+      ],
     );
   }
 }
@@ -126,7 +107,7 @@ class _HomeOptions extends StatelessWidget {
 
     return Expanded(
       child: Column(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           OptionButton(

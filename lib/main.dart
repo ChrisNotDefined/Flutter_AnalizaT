@@ -23,18 +23,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final appState = Provider.of<ApplicationState>(context);
 
-    appState.loginChanges.listen((isLoggedIn) {
-      if (!isLoggedIn) {
-        print('Push to login');
-        appState.navigationKey.currentState
-            .pushNamedAndRemoveUntil('login', (route) => false);
-        return;
-      }
-      print('Push to home');
-      appState.navigationKey.currentState
-          .pushNamedAndRemoveUntil('home', (route) => false);
-    });
-
     String _initialRoute = 'login';
 
     return MaterialApp(

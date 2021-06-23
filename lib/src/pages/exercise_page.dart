@@ -1,3 +1,4 @@
+import 'package:exFinal_analiza_T/src/components/AdviceListRowComponent.dart';
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
@@ -18,9 +19,15 @@ class ExercisePage extends StatelessWidget {
           preferredSize: const Size(double.infinity, kToolbarHeight),
         ),
         body: SingleChildScrollView(
-            child: Column(
-          children: [_TipsExcersice(), _BotonExcersice()],
-        )));
+            child: Container(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: Column(
+          children: [
+              _TipsExcersice(),
+              _BotonExcersice(),
+          ],
+        ),
+            )));
   }
 }
 
@@ -34,13 +41,23 @@ class _TipsExcersice extends StatelessWidget {
   );
 
   final videoView = Container(
-    height: 315,
-    child: WebView(
-      initialUrl: Uri.dataFromString(
-              '<iframe width="100%" height="290" src="https://www.youtube.com/embed/0YRX4pEP6pY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>',
-              mimeType: 'text/html')
-          .toString(),
-      javascriptMode: JavascriptMode.unrestricted,
+    margin: EdgeInsets.symmetric(vertical: 10.0),
+    height: 300,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(10.0),
+      child: WebView(
+        initialUrl: Uri.dataFromString('''
+                    <iframe 
+                      style="width:100%;height:100%;top:0;left:0;position:absolute;"
+                      src="https://www.youtube.com/embed/0YRX4pEP6pY"
+                      title="YouTube video player"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write;
+                      encrypted-media; gyroscope; picture-in-picture">
+                    </iframe>
+                ''', mimeType: 'text/html').toString(),
+        javascriptMode: JavascriptMode.unrestricted,
+      ),
     ),
   );
 
@@ -58,17 +75,23 @@ class _TipsExcersice extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            '1. Levantarte mas temprano',
-            style: label,
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Text(
+              'Consejos para hacer ejercicio',
+              style: TextStyle(fontSize: 24, color: MyColors.accentColor),
+              textAlign: TextAlign.center,
+            ),
           ),
-          Text('2. Dedica 6 dias de la semana', style: label),
-          Text('3. Elige una actividad', style: label),
-          Text('4. Invierte', style: label),
-          Text('5. Metas a corto plazo', style: label),
-          Text('6. Anota resultados', style: label),
-          Text('7. Desafiante', style: label),
-          Text('8. Dale un significado personal', style: label),
+          AdviceRowList(advice: 'Levantate más temprano'),
+          AdviceRowList(advice: 'Dedica 6 dias de la semana'),
+          AdviceRowList(advice: 'Elige una actividad'),
+          AdviceRowList(advice: 'Invierte'),
+          AdviceRowList(advice: 'Metas a corto plazo'),
+          AdviceRowList(advice: 'Anota resultados'),
+          AdviceRowList(advice: 'Desafiate'),
+          AdviceRowList(advice: 'Dale un significado personal'),
           videoView,
         ],
       ),
@@ -84,8 +107,8 @@ class _BotonExcersice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.0),
       height: 50.0,
-      alignment: Alignment.center,
       width: double.infinity,
       child: ButtonComponent(
         child: Text('Regresar', style: TextStyle(fontSize: 25.0)),

@@ -1,3 +1,4 @@
+import 'package:exFinal_analiza_T/src/components/AdviceListRowComponent.dart';
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
@@ -15,12 +16,15 @@ class DietPage extends StatelessWidget {
           preferredSize: const Size(double.infinity, kToolbarHeight),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _TipsDiet(),
-              _BotonDiet(),
-            ],
+          child: Container(
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _TipsDiet(),
+                _BotonDiet(),
+              ],
+            ),
           ),
         ));
   }
@@ -30,16 +34,29 @@ class _TipsDiet extends StatelessWidget {
   _TipsDiet({Key key}) : super(key: key);
 
   final TextStyle label = TextStyle(
-      color: MyColors.accentColor, fontWeight: FontWeight.bold, fontSize: 16.0);
+    color: MyColors.accentColor,
+    fontWeight: FontWeight.bold,
+    fontSize: 16.0,
+  );
 
   final Widget videoView = Container(
-    height: 315,
-    child: WebView(
-      initialUrl: Uri.dataFromString(
-              '<iframe width="100%" height="290" src="https://www.youtube.com/embed/2btyqqOjXEM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>',
-              mimeType: 'text/html')
-          .toString(),
-      javascriptMode: JavascriptMode.unrestricted,
+    margin: EdgeInsets.symmetric(vertical: 10.0),
+    height: 300,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(10.0),
+      child: WebView(
+        initialUrl: Uri.dataFromString('''
+                <iframe
+                  style="width:100%;height:100%;top:0;left:0;position:absolute;"
+                  src="https://www.youtube.com/embed/2btyqqOjXEM"
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write;
+                  encrypted-media; gyroscope; picture-in-picture">
+                </iframe>
+                ''', mimeType: 'text/html').toString(),
+        javascriptMode: JavascriptMode.unrestricted,
+      ),
     ),
   );
 
@@ -57,45 +74,55 @@ class _TipsDiet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            "1 Incorporar a diario alimentos de todos los grupos.",
-            style: label,
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Text(
+              'Consejos alimenticios',
+              style: TextStyle(fontSize: 24, color: MyColors.accentColor),
+              textAlign: TextAlign.center,
+            ),
           ),
-          Text(
-            '2 Tomar a diario 8 vasos de agua naturalen .',
-            style: label,
+          AdviceRowList(
+            type: AdviceType.Diet,
+            advice: "Incorporar a diario alimentos de todos los grupos.",
           ),
-          Text(
-            '3 Consume frutas y verduras.',
-            style: label,
+          AdviceRowList(
+            type: AdviceType.Diet,
+            advice: 'Tomar a diario 8 vasos de agua.',
           ),
-          Text(
-            '4 Reducir el consumo de alimentos con alto contenido de sodio.',
-            style: label,
+          AdviceRowList(
+            type: AdviceType.Diet,
+            advice: 'Consume frutas y verduras.',
           ),
-          Text(
-            '5 Limitar el consumo de bebidas azucaradas',
-            style: label,
+          AdviceRowList(
+            type: AdviceType.Diet,
+            advice:
+                'Reducir el consumo de alimentos con alto contenido de sodio.',
           ),
-          Text(
-            '6 Consumir lacteos, preferentemente descremados.',
-            style: label,
+          AdviceRowList(
+            type: AdviceType.Diet,
+            advice: 'Limitar el consumo de bebidas azucaradas.',
           ),
-          Text(
-            '7 Al consumir carnes quitarle la grasa visible.',
-            style: label,
+          AdviceRowList(
+            type: AdviceType.Diet,
+            advice: 'Consumir lacteos, preferentemente descremados.',
           ),
-          Text(
-            '8 Consumir legumbres, cereales integrales.',
-            style: label,
+          AdviceRowList(
+            type: AdviceType.Diet,
+            advice: 'Al consumir carnes quitarle la grasa visible.',
           ),
-          Text(
-            '9 Consumir aceite como condimento, frutas secas o semillas.',
-            style: label,
+          AdviceRowList(
+            type: AdviceType.Diet,
+            advice: 'Consumir legumbres, cereales integrales.',
           ),
-          Text(
-            '10 El consumo de bebidas alcohólicas debe ser responsable.',
-            style: label,
+          AdviceRowList(
+            type: AdviceType.Diet,
+            advice: 'Consumir aceite como condimento, frutas secas o semillas.',
+          ),
+          AdviceRowList(
+            type: AdviceType.Diet,
+            advice: 'El consumo de bebidas alcohólicas debe ser responsable.',
           ),
           videoView,
         ],
@@ -112,8 +139,8 @@ class _BotonDiet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.0),
       height: 50.0,
-      alignment: Alignment.center,
       width: double.infinity,
       child: ButtonComponent(
         child: Text('Regresar', style: TextStyle(fontSize: 25.0)),

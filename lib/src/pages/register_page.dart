@@ -2,31 +2,40 @@ import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/components/DatePicker.dart';
 import 'package:exFinal_analiza_T/src/components/InputComponent.dart';
+import 'package:exFinal_analiza_T/src/components/LoadingIndicatorComponent.dart';
 import 'package:exFinal_analiza_T/src/components/OptionSelector.dart';
 import 'package:exFinal_analiza_T/src/models/user_model.dart';
-import 'package:exFinal_analiza_T/src/providers/API_provider.dart';
+import 'package:exFinal_analiza_T/src/providers/ApplicationState.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:exFinal_analiza_T/src/utils/Validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = Provider.of<ApplicationState>(context).isLoadingUser;
+
     return Scaffold(
       appBar: PreferredSize(
         child: AppBarComponent(),
         preferredSize: const Size(double.infinity, kToolbarHeight),
       ),
-      body: Container(
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 25.0),
-          child: _RegisterForm(),
-        ),
+      body: Stack(
+        children: [
+          Container(
+            alignment: Alignment.center,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 25.0),
+              child: _RegisterForm(),
+            ),
+          ),
+          isLoading ? LoadingIndicator() : Container()
+        ],
       ),
     );
   }
@@ -128,23 +137,21 @@ class __RegisterFormState extends State<_RegisterForm> {
       _formKey.currentState.save();
 
       try {
-        UserCredential cred = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: _email, password: _pass);
+        // UserCredential cred = await FirebaseAuth.instance
+        //     .createUserWithEmailAndPassword(email: _email, password: _pass);
 
         String formatedDate = DateFormat('dd-MM-yyyy').format(_date);
         UserModel user = UserModel(
-          id: cred.user.uid,
           correo: _email,
           nombre: _name,
           fechaNacimiento: formatedDate,
           sexo: _sex,
         );
 
-        bool result = await UserProvider().postUser(user);
-
-        if (!result) return;
-
-        Navigator.pushReplacementNamed(context, 'home');
+        Provider.of<ApplicationState>(context, listen: false)
+            .registerUser(user, _pass);
+      } on FirebaseAuthException catch (authEx) {
+        print('Firebase error: ${authEx.code}');
       } catch (e) {
         print(e);
       }
