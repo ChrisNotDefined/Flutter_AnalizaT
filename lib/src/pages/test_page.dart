@@ -176,7 +176,7 @@ class _TestState extends State<_TestForm> {
         } else {
           print("Entro al put");
           newResult.idUsuario = user.id;
-          state.uploadAnalysis(newResult, isNew: true);
+          state.uploadAnalysis(newResult, isNew: false);
         }
 
         Provider.of<ApplicationState>(context, listen: false).fetchAnalysis();

@@ -169,19 +169,22 @@ class ResultProvider {
   }
 
   Future<bool> postResult(ResultModel result) async {
-    final url = Uri.https(_url, '/results/${result.idUsuario}');
+    try {
+      final url = Uri.https(_url, '/results/${result.idUsuario}');
 
-    final resp = await http.post(
-      url,
-      body: resultModelToJson(result),
-      headers: {'content-type': 'application/json'},
-    );
+      final resp = await http.post(
+        url,
+        body: resultModelToJson(result),
+        headers: {'content-type': 'application/json'},
+      );
 
-    final decodeData = json.decode(resp.body);
+      final decodeData = json.decode(resp.body);
 
-    print(decodeData);
-
-    return true;
+      print(decodeData);
+      return true;
+    } catch (e) {
+      
+    }
   }
 
   Future<bool> putResult(ResultModel result) async {
@@ -304,7 +307,7 @@ class RegisterProvider {
       if (resp.body.isNotEmpty) {
         print(json.decode(resp.body));
       }
-      
+
       return true;
     } catch (e) {
       print("========FAILED DELETE REGISTERS=========");
