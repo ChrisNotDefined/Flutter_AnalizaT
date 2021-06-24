@@ -79,13 +79,14 @@ class ApplicationState extends ChangeNotifier {
       print('logged in');
     } on FirebaseAuthException catch (authEx) {
       print('FIREBASE ERROR: ${authEx.code}');
+      isLoadingUser = false;
+      notifyListeners();
       throw authEx;
     } catch (e) {
       print('[ERROR] ${e.message}');
-      throw e;
-    } finally {
       isLoadingUser = false;
       notifyListeners();
+      throw e;
     }
   }
 
@@ -108,7 +109,7 @@ class ApplicationState extends ChangeNotifier {
       isLoadingUser = false;
       notifyListeners();
     } on FirebaseAuthException catch (authEx) {
-      print('Firebase error: ${authEx.code}');
+      print('[ERROR]: ${authEx.code}');
       isLoadingUser = false;
       notifyListeners();
       throw authEx;

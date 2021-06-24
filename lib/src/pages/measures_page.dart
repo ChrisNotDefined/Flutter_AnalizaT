@@ -13,77 +13,12 @@ import 'package:exFinal_analiza_T/src/components/FormRowComponent.dart';
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:provider/provider.dart';
 
-class MeasuresPage extends StatefulWidget {
+class MeasuresPage extends StatelessWidget {
   const MeasuresPage({Key key}) : super(key: key);
 
-  @override
-  _MeasuresPageState createState() => _MeasuresPageState();
-}
-
-class _MeasuresPageState extends State<MeasuresPage> {
-  RegisterModel register = new RegisterModel();
-  GlobalKey<FormState> formKey;
-
-  @override
-  void initState() {
-    super.initState();
-    formKey = GlobalKey<FormState>();
-    Provider.of<ApplicationState>(context, listen: false).fetchRegisters();
-  }
-
   Widget build(BuildContext context) {
-    final state = Provider.of<ApplicationState>(context);
+    final isLoading = Provider.of<ApplicationState>(context).isLoadingRegister;
 
-    final registerForm = Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
-      child: Form(
-        key: formKey,
-        child: Column(
-          children: [
-            FormRow(
-              label: 'Peso:',
-              unit: 'Kg',
-              onChange: (value) => setState(() {
-                register.peso = double.tryParse(value);
-              }),
-              validator: isValidDouble,
-              keyBoardType: TextInputType.number,
-            ),
-            FormRow(
-              label: 'Estatura:',
-              unit: 'cm',
-              onChange: (value) => setState(() {
-                register.estatura = double.tryParse(value);
-              }),
-              validator: isValidDouble,
-              keyBoardType: TextInputType.number,
-            ),
-            FormRow(
-              label: 'Cintura:',
-              unit: 'cm',
-              onChange: (value) => setState(() {
-                register.cintura = double.tryParse(value);
-              }),
-              validator: isValidDouble,
-              keyBoardType: TextInputType.number,
-            ),
-            FormRow(
-              label: 'Pecho:',
-              unit: 'cm',
-              onChange: (value) => setState(() {
-                register.pecho = double.tryParse(value);
-              }),
-              validator: isValidDouble,
-              keyBoardType: TextInputType.number,
-            ),
-            SizedBox(height: 10),
-            _CalcMeasuresButton(register: register, formKey: formKey),
-            SizedBox(height: 10),
-            _GoBackButton(),
-          ],
-        ),
-      ),
-    );
     return Scaffold(
       appBar: PreferredSize(
         child: AppBarComponent(),
@@ -100,7 +35,7 @@ class _MeasuresPageState extends State<MeasuresPage> {
               child: Center(
                 child: Column(
                   children: [
-                    registerForm,
+                    _MeasureForm(),
                     SizedBox(height: 10),
                     ChartsSection(),
                   ],
@@ -108,7 +43,7 @@ class _MeasuresPageState extends State<MeasuresPage> {
               ),
             ),
           ),
-          state.isLoadingRegister ? LoadingIndicator() : Container(),
+          isLoading ? LoadingIndicator() : Container(),
         ],
       ),
     );
@@ -244,7 +179,7 @@ class _GoBackButton extends StatelessWidget {
           if (!currentFocus.hasPrimaryFocus) {
             currentFocus.unfocus();
           }
-          
+
           Navigator.pop(context);
         },
       ),
@@ -303,6 +238,79 @@ class MeasuresChart extends StatelessWidget {
           position: charts.BehaviorPosition.bottom,
         ),
       ],
+    );
+  }
+}
+
+class _MeasureForm extends StatefulWidget {
+  const _MeasureForm({Key key}) : super(key: key);
+
+  @override
+  __MeasureFormState createState() => __MeasureFormState();
+}
+
+class __MeasureFormState extends State<_MeasureForm> {
+  RegisterModel register = new RegisterModel();
+  GlobalKey<FormState> formKey;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ApplicationState>(context, listen: false).fetchRegisters();
+    formKey = GlobalKey<FormState>();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: Form(
+        key: formKey,
+        child: Column(
+          children: [
+            FormRow(
+              label: 'Peso:',
+              unit: 'Kg',
+              onChange: (value) => setState(() {
+                register.peso = double.tryParse(value);
+              }),
+              validator: isValidDouble,
+              keyBoardType: TextInputType.number,
+            ),
+            FormRow(
+              label: 'Estatura:',
+              unit: 'cm',
+              onChange: (value) => setState(() {
+                register.estatura = double.tryParse(value);
+              }),
+              validator: isValidDouble,
+              keyBoardType: TextInputType.number,
+            ),
+            FormRow(
+              label: 'Cintura:',
+              unit: 'cm',
+              onChange: (value) => setState(() {
+                register.cintura = double.tryParse(value);
+              }),
+              validator: isValidDouble,
+              keyBoardType: TextInputType.number,
+            ),
+            FormRow(
+              label: 'Pecho:',
+              unit: 'cm',
+              onChange: (value) => setState(() {
+                register.pecho = double.tryParse(value);
+              }),
+              validator: isValidDouble,
+              keyBoardType: TextInputType.number,
+            ),
+            SizedBox(height: 10),
+            _CalcMeasuresButton(register: register, formKey: formKey),
+            SizedBox(height: 10),
+            _GoBackButton(),
+          ],
+        ),
+      ),
     );
   }
 }

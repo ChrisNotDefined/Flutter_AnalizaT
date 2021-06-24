@@ -1,3 +1,4 @@
+import 'package:exFinal_analiza_T/src/components/AlertComponent.dart';
 import 'package:exFinal_analiza_T/src/components/AppBarConponent.dart';
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/components/DatePicker.dart';
@@ -8,6 +9,7 @@ import 'package:exFinal_analiza_T/src/models/user_model.dart';
 import 'package:exFinal_analiza_T/src/providers/ApplicationState.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:exFinal_analiza_T/src/utils/Validators.dart';
+import 'package:exFinal_analiza_T/src/utils/authErrorMessages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -135,11 +137,7 @@ class __RegisterFormState extends State<_RegisterForm> {
   Future<void> _registerUser() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-
       try {
-        // UserCredential cred = await FirebaseAuth.instance
-        //     .createUserWithEmailAndPassword(email: _email, password: _pass);
-
         String formatedDate = DateFormat('dd-MM-yyyy').format(_date);
         UserModel user = UserModel(
           correo: _email,
@@ -148,10 +146,14 @@ class __RegisterFormState extends State<_RegisterForm> {
           sexo: _sex,
         );
 
-        Provider.of<ApplicationState>(context, listen: false)
+        await Provider.of<ApplicationState>(context, listen: false)
             .registerUser(user, _pass);
       } on FirebaseAuthException catch (authEx) {
-        print('Firebase error: ${authEx.code}');
+        AlertComponent(
+          title: 'Error',
+          message: getErrorInfoFromCode(authEx.code),
+          actions: {'OK': () => Navigator.of(context).pop()},
+        ).show(context);
       } catch (e) {
         print(e);
       }
