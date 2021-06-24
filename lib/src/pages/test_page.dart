@@ -247,7 +247,7 @@ class _CalcButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50.0,
-      width: 200.0,
+      width: double.infinity,
       child: ButtonComponent(
         child: Text('Ver resultados', style: TextStyle(fontSize: 25.0)),
         onPressed: this.onPress,
@@ -265,7 +265,7 @@ class _BackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50.0,
-      width: 200.0,
+      width: double.infinity,
       child: ButtonComponent(
         child: Text('Volver', style: TextStyle(fontSize: 25.0)),
         onPressed: () {
