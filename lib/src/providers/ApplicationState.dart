@@ -41,8 +41,10 @@ class ApplicationState extends ChangeNotifier {
     print('Initializing provider');
     FirebaseAuth.instance.userChanges().listen((User user) async {
       print('User changed');
-      isLoadingUser = true;
-      notifyListeners();
+      if (!isLoadingUser) {
+        isLoadingUser = true;
+        notifyListeners();
+      }
       if (user == null) {
         print('No user');
         navigationKey.currentState
@@ -63,16 +65,21 @@ class ApplicationState extends ChangeNotifier {
 
   Future<void> _fetchUser(String uid) async {
     print('Updating user info');
-    isLoadingUser = true;
-    notifyListeners();
+    if (!isLoadingUser) {
+      isLoadingUser = true;
+      notifyListeners();
+    }
     _loggedUser = await UserProvider().getUserById(uid);
     isLoadingUser = false;
     notifyListeners();
   }
 
   Future<void> login({String email, String password}) async {
-    isLoadingUser = true;
-    notifyListeners();
+    if (!isLoadingUser) {
+      isLoadingUser = true;
+      notifyListeners();
+    }
+
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
@@ -91,8 +98,10 @@ class ApplicationState extends ChangeNotifier {
   }
 
   Future<void> registerUser(UserModel user, String pass) async {
-    isLoadingUser = true;
-    notifyListeners();
+    if (!isLoadingUser) {
+      isLoadingUser = true;
+      notifyListeners();
+    }
     try {
       UserCredential cred = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: user.correo, password: pass);
@@ -124,8 +133,10 @@ class ApplicationState extends ChangeNotifier {
   // REGISTERS =============================
 
   void uploadRegister(RegisterModel register) async {
-    isLoadingRegister = true;
-    notifyListeners();
+    if (!isLoadingRegister) {
+      isLoadingRegister = true;
+      notifyListeners();
+    }
     final success =
         await RegisterProvider().postRegister(register, _loggedUser.id);
     if (success) {
@@ -144,8 +155,10 @@ class ApplicationState extends ChangeNotifier {
   }
 
   void cleanRegisters() async {
-    isLoadingRegister = true;
-    notifyListeners();
+    if (!isLoadingRegister) {
+      isLoadingRegister = true;
+      notifyListeners();
+    }
     final success = await RegisterProvider().deleteRegisters(_loggedUser.id);
     if (success) {
       fetchRegisters();
@@ -154,9 +167,33 @@ class ApplicationState extends ChangeNotifier {
 
   // ANALYSIS ==================================
 
+  Future<void> uploadAnalysis(ResultModel result, {bool isNew = true}) async {
+    if (!isLoadingAnalysis) {
+      isLoadingAnalysis = true;
+      notifyListeners();
+    }
+    try {
+      final success = isNew
+          ? await ResultProvider().postResult(result)
+          : await ResultProvider().putResult(result);
+      if (success) {
+        fetchAnalysis();
+      }
+      isLoadingAnalysis = false;
+      notifyListeners();
+    } catch (e) {
+      print('Upload Analysius Failed');
+      print(e);
+      isLoadingAnalysis = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> fetchAnalysis() async {
-    isLoadingAnalysis = true;
-    notifyListeners();
+    if (!isLoadingAnalysis) {
+      isLoadingAnalysis = true;
+      notifyListeners();
+    }
     currentAnalysis = await ResultProvider().getResultByUserId(_loggedUser.id);
     isLoadingAnalysis = false;
     notifyListeners();

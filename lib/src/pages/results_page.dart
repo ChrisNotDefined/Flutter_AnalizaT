@@ -51,6 +51,8 @@ class _Observations extends StatelessWidget {
     final ResultModel results =
         Provider.of<ApplicationState>(context).currentAnalysis;
 
+    if(results == null) return Container();
+
     final warningDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(20.0),
       color: Colors.yellow[200],
@@ -177,59 +179,63 @@ class _Results extends StatelessWidget {
         color: MyColors.primaryColor,
       ),
       width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: EdgeInsets.only(bottom: 20.0),
-            width: double.infinity,
-            child: Text(
-              'Tu análisis',
-              style: TextStyle(
-                color: MyColors.accentColor,
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
+      child: results == null
+          ? Container()
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  width: double.infinity,
+                  child: Text(
+                    'Tu análisis',
+                    style: TextStyle(
+                      color: MyColors.accentColor,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                _ResField(
+                    text: 'Colesterol (HDL):',
+                    unit: '(mg / dl)',
+                    value: results.colesterol.hdl),
+                _ResField(
+                    text: 'Colesterol (LDL):',
+                    unit: '(mg / dl)',
+                    value: results.colesterol.ldl),
+                _ResField(
+                    text: 'Triglicéridos: ',
+                    unit: '(mg / dl)',
+                    value: results.trigliceridos),
+                _ResField(
+                    text: 'Ácido Úrico: ',
+                    unit: '(mg / dl)',
+                    value: results.acidoUrico),
+                _ResField(
+                    text: 'Glucosa: ',
+                    unit: '(mg / dl)',
+                    value: results.glucosa),
+                _ResField(
+                    text: 'Glóbulos Rojos: ',
+                    unit: '(millones / ml) ',
+                    value: results.globulosRojos),
+                _ResField(
+                    text: 'Glóbulos Blancos: ',
+                    unit: '(miles / ml) ',
+                    value: results.globulosBlancos),
+                _ResField(
+                    text: 'Hemoglobina: ',
+                    unit: '(g / L) ',
+                    value: results.hemoglobina),
+                _ResField(
+                    text: 'Plaquetas: ',
+                    unit: '(miles / ml)',
+                    value: results.plaquetas),
+              ],
             ),
-          ),
-          _ResField(
-              text: 'Colesterol (HDL):',
-              unit: '(mg / dl)',
-              value: results.colesterol.hdl),
-          _ResField(
-              text: 'Colesterol (LDL):',
-              unit: '(mg / dl)',
-              value: results.colesterol.ldl),
-          _ResField(
-              text: 'Triglicéridos: ',
-              unit: '(mg / dl)',
-              value: results.trigliceridos),
-          _ResField(
-              text: 'Ácido Úrico: ',
-              unit: '(mg / dl)',
-              value: results.acidoUrico),
-          _ResField(
-              text: 'Glucosa: ', unit: '(mg / dl)', value: results.glucosa),
-          _ResField(
-              text: 'Glóbulos Rojos: ',
-              unit: '(millones / ml) ',
-              value: results.globulosRojos),
-          _ResField(
-              text: 'Glóbulos Blancos: ',
-              unit: '(miles / ml) ',
-              value: results.globulosBlancos),
-          _ResField(
-              text: 'Hemoglobina: ',
-              unit: '(g / L) ',
-              value: results.hemoglobina),
-          _ResField(
-              text: 'Plaquetas: ',
-              unit: '(miles / ml)',
-              value: results.plaquetas),
-        ],
-      ),
     );
   }
 }

@@ -1,9 +1,9 @@
 import 'package:exFinal_analiza_T/src/components/ButtonComponent.dart';
 import 'package:exFinal_analiza_T/src/components/FormRowComponent.dart';
 import 'package:exFinal_analiza_T/src/components/InputComponent.dart';
+import 'package:exFinal_analiza_T/src/components/LoadingIndicatorComponent.dart';
 import 'package:exFinal_analiza_T/src/models/result_model.dart';
 import 'package:exFinal_analiza_T/src/models/user_model.dart';
-import 'package:exFinal_analiza_T/src/providers/API_provider.dart';
 import 'package:exFinal_analiza_T/src/providers/ApplicationState.dart';
 import 'package:exFinal_analiza_T/src/utils/Colors.dart';
 import 'package:exFinal_analiza_T/src/utils/Validators.dart';
@@ -16,6 +16,8 @@ class TestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = Provider.of<ApplicationState>(context).isLoadingAnalysis;
+
     return Scaffold(
       appBar: PreferredSize(
         child: AppBarComponent(),
@@ -23,7 +25,12 @@ class TestPage extends StatelessWidget {
       ),
       body: Container(
         height: MediaQuery.of(context).size.height - kToolbarHeight,
-        child: SingleChildScrollView(child: _TestForm()),
+        child: Stack(
+          children: [
+            SingleChildScrollView(child: _TestForm()),
+            isLoading ? LoadingIndicator() : Container()
+          ],
+        ),
       ),
     );
   }
@@ -146,43 +153,30 @@ class _TestState extends State<_TestForm> {
   Future<void> uploadTest() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      UserModel user =
-          Provider.of<ApplicationState>(context, listen: false).user;
+      final state = Provider.of<ApplicationState>(context, listen: false);
+      UserModel user = state.user;
       try {
-        ResultModel result = await ResultProvider().getResultByUserId(user.id);
+        ResultModel result = state.currentAnalysis;
+        ResultModel newResult = new ResultModel();
+        newResult.idUsuario = user.id;
+        newResult.acidoUrico = _acidoUrico;
+        newResult.trigliceridos = _trigliceridos;
+        newResult.glucosa = _glucosa;
+        newResult.globulosRojos = _globulosRojos;
+        newResult.globulosBlancos = _globulosBlancos;
+        newResult.plaquetas = _plaquetas;
+        newResult.hemoglobina = _hemoglobina;
+        newResult.colesterol = new ColesterolModel();
+        newResult.colesterol.ldl = _ldl;
+        newResult.colesterol.hdl = _hdl;
+
         if (result == null) {
           print("Entro al post");
-          ResultModel postResult = new ResultModel();
-          postResult.idUsuario = user.id;
-          postResult.acidoUrico = _acidoUrico;
-          postResult.trigliceridos = _trigliceridos;
-          postResult.glucosa = _glucosa;
-          postResult.globulosRojos = _globulosRojos;
-          postResult.globulosBlancos = _globulosBlancos;
-          postResult.plaquetas = _plaquetas;
-          postResult.hemoglobina = _hemoglobina;
-          postResult.colesterol = new ColesterolModel();
-          postResult.colesterol.ldl = _ldl;
-          postResult.colesterol.hdl = _hdl;
-          bool response = await ResultProvider().postResult(postResult);
-
-          if (!response) return;
+          state.uploadAnalysis(newResult);
         } else {
           print("Entro al put");
-          ResultModel putResult = new ResultModel();
-          putResult.acidoUrico = _acidoUrico;
-          putResult.trigliceridos = _trigliceridos;
-          putResult.glucosa = _glucosa;
-          putResult.globulosRojos = _globulosRojos;
-          putResult.globulosBlancos = _globulosBlancos;
-          putResult.plaquetas = _plaquetas;
-          putResult.hemoglobina = _hemoglobina;
-          putResult.colesterol = new ColesterolModel();
-          putResult.colesterol.ldl = _ldl;
-          putResult.colesterol.hdl = _hdl;
-          putResult.idUsuario = user.id;
-          bool response = await ResultProvider().putResult(putResult);
-          if (!response) return;
+          newResult.idUsuario = user.id;
+          state.uploadAnalysis(newResult, isNew: true);
         }
 
         Provider.of<ApplicationState>(context, listen: false).fetchAnalysis();
